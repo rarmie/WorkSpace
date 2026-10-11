@@ -1,5 +1,5 @@
-from pydantic import BaseModel, Field, field_validator, HttpUrl, model_validator
-from typing import Self, Literal
+from pydantic import BaseModel, Field, field_validator, HttpUrl, model_validator, StringConstraints
+from typing import Self, Literal, Annotated
 
 class HealthResponse(BaseModel):
     status: str
@@ -53,10 +53,8 @@ class ExtractResponse(BaseModel):
 
 class MatchRequest(BaseModel):
     resume: str = Field(min_length=500, max_length=15_000)
-    role: str | None = None
-    requirements: list[str] = Field(
-        min_length=1
-    )
+    role: str | None = Field(default=None, min_length=1, max_length=200)
+    requirements: list[Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=500)]] = Field(min_length=1, max_length=30)
 
     @field_validator("resume", mode="before")
     @classmethod
