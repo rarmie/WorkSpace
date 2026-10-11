@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, field_validator, HttpUrl, model_validator
-from typing import Self
+from typing import Self, Literal
 
 class HealthResponse(BaseModel):
     status: str
@@ -49,4 +49,46 @@ class ExtractResponse(BaseModel):
     link: str | None = Field(
         default=None,
         description="The URL associated with the job posting or application, if explicitly provided in the input."
+    )
+
+class MatchRequest(BaseModel):
+    resume: str = Field(min_length=500, max_length=15_000)
+    role: str | None = None
+    requirements: list[str] = Field(
+        min_length=1
+    )
+
+    @field_validator("resume", mode="before")
+    @classmethod
+    def trim_resume(cls, value: object) -> object:
+        if isinstance(value, str):
+            value = value.strip()
+
+        return value
+
+class RequirementVerdict(BaseModel):
+    requirement: str = Field(
+        description="The requirement being judged, as given in the requirements list."
+    ) 
+    verdict: Literal["met", "partial", "missing"] = Field(
+        description=("met: the resume shows the requirement in full. "
+                    "partial: related evidence that falls short, such as fewer years, a similar tool, or coursework instead of work. " 
+                    "missing: no evidence.")
+    )
+    reason: str = Field(
+        description="One short sentence citing the resume evidence for the verdict, or stating none was found."
+        )
+
+class MatchResult(BaseModel):
+    verdicts: list[RequirementVerdict] = Field(
+        min_length=1,
+        description="One verdict per requirement."
+    ) 
+    summary: str = Field(
+        description="One or two sentences on overall fit: the strongest matches and the most important gaps."
+        )
+
+class MatchResponse(MatchResult):
+    score: int = Field(
+        ge=0, le=100
     )
