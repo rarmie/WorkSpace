@@ -1,0 +1,78 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  .m{--bg:#0a0e16;--top:#111827;--pop:#131a29;--card:#0e1320;--line:#1d2636;--input:#2a3448;--ink:#e7ebf3;--sub:#8590a6;--pri:#34d399;--onp:#06281c;--nav:#182132;--av:#1b2436;
+    font:13px/1.45 'Outfit',system-ui,sans-serif;color:var(--ink);background:var(--bg);border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+  .m *{box-sizing:border-box}
+  .m .top{display:flex;align-items:center;gap:14px;padding:10px 16px;background:var(--top);border-bottom:1px solid var(--line)}
+  .m .brand{display:flex;align-items:center;gap:8px;font-weight:600}
+  .m .logo{width:24px;height:24px;border-radius:7px;background:var(--pri);color:var(--onp);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
+  .m nav{display:flex;gap:4px}.m nav span{padding:4px 9px;border-radius:7px;color:var(--sub)}
+  .m .sp{flex:1}
+  .m .btn{height:30px;padding:0 12px;border-radius:8px;display:inline-flex;align-items:center;font-weight:600;white-space:nowrap}
+  .m .btn.p{background:var(--pri);color:var(--onp)}
+  .m .btn.g{color:var(--sub)}
+  .m .ico{color:var(--sub);letter-spacing:8px}
+  .m .avs{width:28px;height:28px;border-radius:50%;background:var(--av);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:#c9d2e3;outline:2px solid var(--pri);outline-offset:2px}
+  .m .page{padding:24px;display:grid;grid-template-columns:260px 1fr;gap:18px}
+  .m .panel{background:var(--pop);border:1px solid var(--line);border-radius:12px}
+  .m .ph{padding:14px 16px 0;display:flex;align-items:flex-start}
+  .m .ph h3{margin:0;font:600 14px 'Outfit'}
+  .m .ph p{margin:2px 0 0;color:var(--sub);font-size:12px}
+  .m .pb{padding:12px 16px 16px}
+  .m .av{width:68px;height:68px;border-radius:50%;background:var(--av);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:24px;color:#c9d2e3;margin:0 auto 10px}
+  .m .chip{display:inline-flex;align-items:center;gap:6px;padding:2px 8px;border-radius:999px;background:var(--nav);font-size:11.5px}
+  .m .g{width:12px;height:12px;border-radius:50%;background:conic-gradient(#ea4335 0 25%,#fbbc05 0 50%,#34a853 0 75%,#4285f4 0)}
+  .m .ta{border:1px solid var(--input);border-radius:8px;background:var(--bg);padding:10px 12px;font-size:12px;line-height:1.55;white-space:pre-line;overflow:hidden;flex:1;min-height:230px}
+  .m .ta .dim{color:var(--sub)}
+  .m .foot{display:flex;align-items:center;gap:8px;margin-top:10px}
+  .m .count{color:var(--sub);font-variant-numeric:tabular-nums;font-size:12px;padding-top:2px}
+  .m .count b{color:var(--ink);font-weight:600}
+  .m .meta{color:var(--sub);font-size:12px}
+  .m .stat{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+  .m .stat:last-child{border:0}
+  .m .stat span:first-child{color:var(--sub)}
+</style>
+<h2>Profile page, chosen 13 Oct 2026</h2>
+<p class="subtitle">Layout B of three (A: single column of stacked cards; C: resume-first with a guidance panel). Same Midnight tokens and top bar as <code>2026-10-09-jobs-page-midnight.html</code>. Shown in dark mode with a resume being edited.</p>
+<ul class="subtitle" style="margin:0 0 16px;padding-left:18px">
+  <li><b>Entry point:</b> a new avatar at the right end of the top bar links to <code>/profile</code>. It is not a nav tab.</li>
+  <li><b>Left panel (260px), read-only:</b> photo (initials when there is no image), name, email, and a sign-in method chip (Google, or email and password). Below a line: member since (<code>User.createdAt</code>), number of applications, and resume updated (<code>resumeUpdatedAt</code>).</li>
+  <li><b>Right panel:</b> "Resume" title, a one-line explanation and the <code>3,412 / 15,000</code> counter in the header. A tall plain-text editor fills the rest.</li>
+  <li><b>Footer:</b> status text on the left ("Unsaved changes" / "Saved 12 Oct"), Discard and Save resume on the right.</li>
+</ul>
+<div class="m">
+  <div class="top"><span class="brand"><span class="logo">W</span>WorkSpace</span><nav><span>Dashboard</span><span>Jobs</span></nav><span class="sp"></span><span class="btn p">+ Add Application</span><span class="ico">☾ ?</span><span class="avs">RM</span></div>
+  <div class="page">
+    <div class="panel">
+      <div class="pb" style="text-align:center;padding-top:20px">
+        <div class="av">RM</div>
+        <div style="font-weight:600;font-size:15px">Reginald Masangya</div>
+        <div class="meta">reginald@example.com</div>
+        <div style="margin-top:10px"><span class="chip"><span class="g"></span>Google</span></div>
+      </div>
+      <div class="pb" style="border-top:1px solid var(--line)">
+        <div class="stat"><span>Member since</span><span>Apr 2026</span></div>
+        <div class="stat"><span>Applications</span><span>24</span></div>
+        <div class="stat"><span>Resume updated</span><span>12 Oct</span></div>
+      </div>
+    </div>
+    <div class="panel" style="display:flex;flex-direction:column">
+      <div class="ph"><div><h3>Resume</h3><p>Plain text. Used by "Check match" on each job.</p></div><span class="sp"></span><span class="count"><b>3,412</b> / 15,000</span></div>
+      <div class="pb" style="flex:1;display:flex;flex-direction:column">
+        <div class="ta">JORDAN REYES · Backend developer
+<span class="dim">Manila · jordan@example.com</span>
+
+EXPERIENCE
+Software Engineer, Lakbay Labs (2024–present)
+– Built REST APIs in Python (FastAPI) on PostgreSQL
+– Deployed services to Google Cloud Run
+– Code review and Git workflow for a team of 4
+
+EDUCATION
+BS Computer Science …</div>
+        <div class="foot"><span class="meta">Unsaved changes</span><span class="sp"></span><span class="btn g">Discard</span><span class="btn p">Save resume</span></div>
+      </div>
+    </div>
+  </div>
+</div>

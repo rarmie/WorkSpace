@@ -9,13 +9,20 @@ import AddJobForm from "../AddFormJob";
 import SendConcernForm from '@/components/ui/SendConcernsForm'
 import LogoutButton from "../LogoutButton";
 import ThemeToggle from "./ThemeToggle";
+import UserAvatar from "../UserAvatar";
 
 const NAV_ITEMS = [
   { name: 'Dashboard', href: '/dashboard' },
   { name: 'Jobs', href: '/jobs' },
 ]
 
-export default function TopBar() {
+export type TopBarUser = {
+  name?: string | null
+  email?: string | null
+  image?: string | null
+}
+
+export default function TopBar({ user }: { user: TopBarUser | null }) {
   const pathname = usePathname();
   const isActive = (path: string) => pathname === path
 
@@ -94,6 +101,20 @@ export default function TopBar() {
       </Dialog>
 
       <LogoutButton />
+
+      {/* The way into /profile. Ringed in the accent colour while on that page. */}
+      {user && (
+        <Link
+          href="/profile"
+          aria-label="Profile"
+          title="Profile"
+          className={`rounded-full outline-offset-2 transition-[outline-color] ${
+            isActive('/profile') ? "outline-2 outline-primary" : "outline-2 outline-transparent hover:outline-border"
+          }`}
+        >
+          <UserAvatar name={user.name} email={user.email} image={user.image} size={28} className="text-[11px]" />
+        </Link>
+      )}
     </header>
   )
 }
