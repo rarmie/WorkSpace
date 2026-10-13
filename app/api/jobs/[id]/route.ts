@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { isRecordNotFound } from '@/lib/prisma-errors'
 import { z } from 'zod'
 import { getServerSession } from 'next-auth'
 import {authOptions} from '@/app/api/auth/[...nextauth]/route'
@@ -16,14 +17,6 @@ const updateSchema = z.object({
   appliedAt: z.coerce.date().optional(),
   requirements: z.array(z.string()).optional()
 })
-
-function isRecordNotFound(err: unknown): boolean{
-  return(
-    typeof err === 'object' && 
-    err !== null && 'code' in err &&
-    (err as {code?: unknown}).code === 'P2025'
-  )
-}
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions)
