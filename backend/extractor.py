@@ -26,7 +26,12 @@ STRICT EXTRACTION RULES:
 Return the information using the provided schema."""
 
 load_dotenv(Path(__file__).resolve().parent / ".env")
-client = genai.Client()
+client = genai.Client(
+    http_options=types.HttpOptions(
+        timeout=20_000,
+        retry_options=types.HttpRetryOptions(attempts=1)
+    )
+)
 logger = logging.getLogger(__name__)
 
 async def extract(text: str) -> ExtractResponse:

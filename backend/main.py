@@ -63,6 +63,12 @@ async def extract_job(payload: ExtractRequest) -> ExtractResponse:
             status_code=503,
             detail="Gemini is unavailable. Try again."
         ) from e
+    except httpx.TimeoutException as e:
+        logger.warning("Gemini took too long (504):%s", e)
+        raise HTTPException(
+            status_code=504,
+            detail="Gemini took too long. Try again later."
+        ) from e
     except errors.ClientError as e:
         if e.code == 429:
             logger.warning("Rate limit reached (429):%s", e)
@@ -88,6 +94,12 @@ async def match_resume(payload: MatchRequest) -> MatchResponse:
         raise HTTPException(
             status_code=503,
             detail="Gemini is unavailable. Try again later."
+        ) from e
+    except httpx.TimeoutException as e:
+        logger.warning("Gemini took too long (504):%s", e)
+        raise HTTPException(
+            status_code=504,
+            detail="Gemini took too long. Try again later."
         ) from e
     except errors.ClientError as e:
         if e.code == 429:
