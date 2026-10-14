@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { prisma } from '@/lib/prisma'
+import { isRecordNotFound } from '@/lib/prisma-errors'
 import { RESUME_LENGTH } from '@/lib/resume'
 
 // Mirrors resumeSchema in components/ResumeForm.tsx. The two are separate definitions, so a
@@ -15,14 +16,6 @@ const profileSchema = z.object({
     .min(RESUME_LENGTH.min, `Resume must be at least ${RESUME_LENGTH.min} characters`)
     .max(RESUME_LENGTH.max, `Resume must be at most ${RESUME_LENGTH.max} characters`),
 })
-
-function isRecordNotFound(err: unknown): boolean{
-  return(
-    typeof err === 'object' && 
-    err !== null && 'code' in err &&
-    (err as {code?: unknown}).code === 'P2025'
-  )
-}
 
 export async function PATCH(req: NextRequest): Promise<NextResponse> {
 

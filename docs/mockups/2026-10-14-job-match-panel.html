@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Job match panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; padding:32px 16px; background:#05080e; color:#e7ebf3; font-family:'Outfit',system-ui,sans-serif; }
+  main { max-width:980px; margin:auto; }
+  h1 { font-size:22px; margin:0 0 4px; } h2 { font-size:17px; margin:36px 0 10px; }
+  .lead { color:#8590a6; margin:0 0 20px; font-size:14px; }
+
+  .mk { --bg:#0a0e16; --card:#131a29; --border:#1d2636; --muted:#1a2335; --mfg:#8590a6; --fg:#e7ebf3;
+        --primary:#34d399; --pfg:#06281c; --accent:#132a22; --afg:#6ee7b7;
+        --met:#34d399; --metbg:rgba(52,211,153,.12); --part:#fcd34d; --partbg:rgba(252,211,77,.12);
+        --miss:#f87171; --missbg:rgba(248,113,113,.12);
+        font-family:'Outfit',system-ui,sans-serif; background:var(--bg); color:var(--fg);
+        border-radius:12px; padding:22px; text-align:left; font-size:14px; line-height:1.45; }
+  .mk * { box-sizing:border-box; }
+  .mk .hdr { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; }
+  .mk .co { display:flex; gap:12px; align-items:center; }
+  .mk .ini { width:40px; height:40px; border-radius:8px; background:var(--muted); display:flex; align-items:center; justify-content:center; font-weight:700; }
+  .mk h4 { margin:0; font-size:18px; font-weight:600; }
+  .mk .sub { color:var(--mfg); font-size:13px; }
+  .mk .btns { display:flex; gap:8px; align-items:center; }
+  .mk .btn { border:1px solid var(--border); background:var(--card); color:var(--fg); border-radius:8px; padding:6px 12px; font-size:13px; font-family:inherit; }
+  .mk .btn.pri { background:var(--primary); color:var(--pfg); border-color:transparent; font-weight:600; }
+  .mk .badge { background:var(--accent); color:var(--afg); border-radius:999px; padding:4px 10px; font-size:12px; font-weight:600; }
+  .mk .pipe { display:flex; gap:6px; margin:20px 0; } .mk .pipe div { flex:1; height:4px; border-radius:9px; background:var(--muted); } .mk .pipe .on { background:var(--primary); }
+  .mk .grid { display:grid; grid-template-columns:1.2fr 1fr; gap:22px; }
+  .mk .lbl { font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--mfg); margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
+  .mk .facts { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .mk .fact { border:1px solid var(--border); background:var(--card); border-radius:8px; padding:10px; }
+  .mk .fact small { display:block; font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--mfg); font-weight:600; }
+  .mk .box { border:1px solid var(--border); background:var(--card); border-radius:8px; padding:12px; }
+  .mk .chips { display:flex; flex-wrap:wrap; gap:6px; } .mk .chip { background:var(--muted); border-radius:6px; padding:4px 8px; font-size:12px; }
+  .mk .stack > * + * { margin-top:18px; }
+  .mk .score { font-size:34px; font-weight:700; line-height:1; } .mk .score span { font-size:15px; color:var(--mfg); font-weight:500; }
+  .mk .bar { display:flex; height:6px; border-radius:9px; overflow:hidden; gap:2px; margin:10px 0 6px; }
+  .mk .legend { display:flex; gap:12px; font-size:12px; color:var(--mfg); }
+  .mk .dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px; }
+  .mk .v { display:flex; gap:10px; padding:9px 0; border-top:1px solid var(--border); }
+  .mk .v:first-child { border-top:0; padding-top:0; }
+  .mk .tag { flex:none; font-size:11px; font-weight:600; border-radius:6px; padding:2px 7px; height:fit-content; min-width:58px; text-align:center; }
+  .mk .met { background:var(--metbg); color:var(--met); } .mk .part { background:var(--partbg); color:var(--part); } .mk .miss { background:var(--missbg); color:var(--miss); }
+  .mk .why { color:var(--mfg); font-size:12px; }
+  .mk .meta { font-size:12px; color:var(--mfg); }
+  .mk .pill { display:inline-flex; align-items:center; gap:6px; border-radius:999px; padding:4px 10px; font-size:12px; font-weight:600; background:var(--partbg); color:var(--part); }
+  .mk .cchip { border-radius:6px; padding:4px 8px; font-size:12px; display:inline-flex; gap:5px; align-items:center; }
+  .mk .tip { position:relative; }
+  .mk .tipbox { position:absolute; top:calc(100% + 6px); left:0; width:260px; background:#1f2a3e; border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-size:12px; color:var(--fg); z-index:2; box-shadow:0 8px 20px rgba(0,0,0,.4); }
+  .option .content .mk p { color:var(--fg); }
+  .option .content p.note { font-size:13px; margin:8px 2px 0; }
+
+
+  .mks { --bg:#0a0e16; --card:#131a29; --border:#1d2636; --muted:#1a2335; --mfg:#8590a6; --fg:#e7ebf3;
+        --primary:#34d399; --pfg:#06281c; --accent:#132a22; --afg:#6ee7b7;
+        --met:#34d399; --metbg:rgba(52,211,153,.12); --part:#fcd34d; --partbg:rgba(252,211,77,.12);
+        --miss:#f87171; --missbg:rgba(248,113,113,.12);
+        font-family:'Outfit',system-ui,sans-serif; background:var(--bg); color:var(--fg);
+        border-radius:12px; padding:18px; text-align:left; font-size:14px; line-height:1.45; }
+  .mks * { box-sizing:border-box; }
+  .mks p { margin:0; color:var(--fg); }
+  .mks .box { border:1px solid var(--border); background:var(--card); border-radius:10px; padding:16px; }
+  .mks .row { display:flex; gap:20px; align-items:center; flex-wrap:wrap; }
+  .mks .btn { border:1px solid var(--border); background:var(--card); color:var(--fg); border-radius:8px; padding:7px 13px; font-size:13px; font-family:inherit; white-space:nowrap; }
+  .mks .btn.pri { background:var(--primary); color:var(--pfg); border-color:transparent; font-weight:600; }
+  .mks .btn[disabled] { opacity:.45; }
+  .mks .meta { font-size:12px; color:var(--mfg); }
+  .mks .legend { display:flex; gap:12px; font-size:12px; color:var(--mfg); flex-wrap:wrap; }
+  .mks .dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px; }
+  .mks .ring { width:84px; height:84px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex:none; }
+  .mks .ring > div { width:68px; height:68px; border-radius:50%; background:var(--card); display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:700; }
+  .mks .icon { width:84px; height:84px; border-radius:50%; background:var(--muted); display:flex; align-items:center; justify-content:center; font-size:30px; color:var(--mfg); flex:none; }
+  .mks .grow { flex:1; min-width:200px; }
+  .mks .ttl { font-weight:600; margin-bottom:3px; }
+  .mks .banner { display:flex; gap:10px; align-items:center; justify-content:space-between; border-radius:8px; padding:8px 12px; font-size:13px; margin-bottom:14px; flex-wrap:wrap; }
+  .mks .warn { background:var(--partbg); color:var(--part); }
+  .mks .err { background:var(--missbg); color:var(--miss); }
+  .mks a { color:var(--primary); text-decoration:none; font-weight:500; }
+  .mks .spin { width:68px; height:68px; border-radius:50%; border:6px solid var(--muted); border-top-color:var(--primary); animation:mkspin 1s linear infinite; }
+  @keyframes mkspin { to { transform:rotate(360deg); } }
+  .mks .sk { height:10px; border-radius:6px; background:linear-gradient(90deg,var(--muted),#243049,var(--muted)); background-size:200% 100%; animation:mksh 1.4s ease infinite; margin-top:8px; }
+  @keyframes mksh { to { background-position:-200% 0; } }
+  .mks .faded { opacity:.45; }
+  .st { margin-bottom:22px; }
+  .st h3 { font-size:15px; margin:0 0 2px; }
+  .st .when { font-size:13px; color:#888; margin:0 0 8px; }
+
+  .st .when { color:#8590a6; }
+</style>
+</head>
+<body>
+<main>
+<h1>Job match panel (F3)</h1>
+<p class="lead">Chosen 14 Oct 2026: a full-width panel under the pipeline bar in the job detail pane (layout B, over "requirements become the match" and a compact header pill). Dark theme, Jordan Reyes test data. Requirement chips stay in their own section.</p>
+<h2>Layout: checked result in the detail pane</h2>
+<div class="mk">
+        <div class="hdr">
+          <div class="co"><div class="ini">B</div><div><h4>Brightlane Logistics</h4><div class="sub">Backend Engineer</div></div></div>
+          <div class="btns"><span class="badge">Applied</span><button class="btn">Edit</button><button class="btn">Delete</button></div>
+        </div>
+        <div class="pipe"><div class="on"></div><div class="on"></div><div></div><div></div></div>
+        <div class="box" style="margin-bottom:22px;padding:16px">
+          <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+            <div style="text-align:center;min-width:90px">
+              <div style="width:84px;height:84px;border-radius:50%;background:conic-gradient(var(--primary) 0 64%, var(--muted) 64% 100%);display:flex;align-items:center;justify-content:center;margin:auto">
+                <div style="width:68px;height:68px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700">64</div>
+              </div>
+              <div class="meta" style="margin-top:6px">Resume match</div>
+            </div>
+            <div style="flex:1;min-width:220px">
+              <p style="margin:0 0 8px">Strong on Python, Postgres and REST. Main gaps are AWS and Kubernetes.</p>
+              <div class="legend"><span><i class="dot" style="background:var(--met)"></i>4 met</span><span><i class="dot" style="background:var(--part)"></i>1 partial</span><span><i class="dot" style="background:var(--miss)"></i>2 missing</span><span>· Checked Oct 14</span></div>
+            </div>
+            <button class="btn">Re-check</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px;margin-top:14px;border-top:1px solid var(--border);padding-top:12px">
+            <div>
+              <div class="v"><span class="tag met">Met</span><div>BS Computer Science<div class="why">BS CS, University of the Philippines, 2022.</div></div></div>
+              <div class="v"><span class="tag part">Partial</span><div>3+ years Python<div class="why">About 2 years of Python in work roles.</div></div></div>
+              <div class="v"><span class="tag met">Met</span><div>PostgreSQL<div class="why">Lists Postgres at Kalye Labs.</div></div></div>
+              <div class="v"><span class="tag met">Met</span><div>REST APIs<div class="why">Built REST APIs in FastAPI.</div></div></div>
+            </div>
+            <div>
+              <div class="v"><span class="tag miss">Missing</span><div>AWS<div class="why">Only Google Cloud Run is mentioned.</div></div></div>
+              <div class="v"><span class="tag miss">Missing</span><div>Kubernetes<div class="why">No evidence found.</div></div></div>
+              <div class="v"><span class="tag met">Met</span><div>Git<div class="why">Git listed under tools.</div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="grid">
+          <div class="stack">
+            <div class="facts"><div class="fact"><small>Salary</small>₱90k–120k</div><div class="fact"><small>Applied</small>Oct 2, 2026</div></div>
+            <div><div class="lbl">Notes</div><div class="box">Referred by Mia. Hybrid, 2 days in office.</div></div>
+          </div>
+          <div><div class="lbl">Requirements</div><div class="chips"><span class="chip">BS Computer Science</span><span class="chip">3+ years Python</span><span class="chip">PostgreSQL</span><span class="chip">REST APIs</span><span class="chip">AWS</span><span class="chip">Kubernetes</span><span class="chip">Git</span></div></div>
+        </div>
+      </div>
+<h2>Panel states</h2>
+<!-- 1 -->
+<div class="st">
+  <h3>1 · Never checked</h3>
+  <p class="when">Job has requirements, you have a resume, no match yet.</p>
+  <div class="mk mks"><div class="box"><div class="row">
+    <div class="icon">◎</div>
+    <div class="grow"><p class="ttl">How well does your resume fit?</p><p class="meta">Gemini checks each of this job's 7 requirements against your resume. Takes about 10–30 seconds.</p></div>
+    <button class="btn pri">Check match</button>
+  </div></div></div>
+</div>
+
+<!-- 2 -->
+<div class="st">
+  <h3>2 · Checking</h3>
+  <p class="when">After the click, while waiting (up to 60 s). The button is disabled so it can't be double-clicked.</p>
+  <div class="mk mks"><div class="box"><div class="row">
+    <div class="ring" style="background:none"><div class="spin" style="background:none"></div></div>
+    <div class="grow"><p class="ttl">Checking 7 requirements…</p><p class="meta">This usually takes 10–30 seconds. You can keep using the page.</p><div class="sk" style="width:80%"></div><div class="sk" style="width:55%"></div></div>
+    <button class="btn" disabled>Checking…</button>
+  </div></div></div>
+</div>
+
+<!-- 3 -->
+<div class="st">
+  <h3>3 · Result</h3>
+  <p class="when">The normal checked state (collapsed here; the verdict list below it is as in option B).</p>
+  <div class="mk mks"><div class="box"><div class="row">
+    <div style="text-align:center"><div class="ring" style="background:conic-gradient(var(--primary) 0 64%, var(--muted) 64% 100%)"><div>64</div></div><div class="meta" style="margin-top:6px">Resume match</div></div>
+    <div class="grow"><p style="margin-bottom:8px">Strong on Python, Postgres and REST. Main gaps are AWS and Kubernetes.</p>
+      <div class="legend"><span><i class="dot" style="background:var(--met)"></i>4 met</span><span><i class="dot" style="background:var(--part)"></i>1 partial</span><span><i class="dot" style="background:var(--miss)"></i>2 missing</span><span>· Checked Oct 14</span></div></div>
+    <button class="btn">Re-check</button>
+  </div><p class="meta" style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px">▾ 7 verdicts (two columns, as in option B)</p></div></div>
+</div>
+
+<!-- 4 -->
+<div class="st">
+  <h3>4 · Stale</h3>
+  <p class="when">You saved a new resume after this check (<code>matchedAt &lt; resumeUpdatedAt</code>). The old result stays visible but dimmed.</p>
+  <div class="mk mks"><div class="box">
+    <div class="banner warn"><span>Your resume changed after this check. The score may be out of date.</span><button class="btn pri" style="padding:4px 10px">Re-check</button></div>
+    <div class="row faded">
+      <div style="text-align:center"><div class="ring" style="background:conic-gradient(var(--primary) 0 64%, var(--muted) 64% 100%)"><div>64</div></div><div class="meta" style="margin-top:6px">Resume match</div></div>
+      <div class="grow"><p style="margin-bottom:8px">Strong on Python, Postgres and REST. Main gaps are AWS and Kubernetes.</p><div class="legend"><span>4 met · 1 partial · 2 missing · Checked Oct 14</span></div></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- 5 -->
+<div class="st">
+  <h3>5 · No resume</h3>
+  <p class="when">Your Profile has no resume yet. Known on the server, so no failed request is needed.</p>
+  <div class="mk mks"><div class="box"><div class="row">
+    <div class="icon">✎</div>
+    <div class="grow"><p class="ttl">Add your resume first</p><p class="meta">Matching compares this job's requirements with the resume saved on your Profile.</p></div>
+    <a class="btn" href="#" style="color:var(--fg)">Go to Profile →</a>
+  </div></div></div>
+</div>
+
+<!-- 6 -->
+<div class="st">
+  <h3>6 · No requirements</h3>
+  <p class="when">The job has none saved (most jobs added before 1 Oct).</p>
+  <div class="mk mks"><div class="box"><div class="row">
+    <div class="icon">≡</div>
+    <div class="grow"><p class="ttl">No requirements to match</p><p class="meta">Add the job's requirements with Edit, or paste the posting into autofill, then check the match.</p></div>
+    <button class="btn" disabled>Check match</button>
+  </div></div></div>
+</div>
+
+<!-- 7 -->
+<div class="st">
+  <h3>7 · Error</h3>
+  <p class="when">The check failed (Gemini busy, timeout, backend down). Shows the route's message. Any previous result stays below it.</p>
+  <div class="mk mks"><div class="box">
+    <div class="banner err"><span>Gemini is unavailable. Try again later.</span><button class="btn" style="padding:4px 10px">Try again</button></div>
+    <div class="row">
+      <div class="icon">◎</div>
+      <div class="grow"><p class="ttl">How well does your resume fit?</p><p class="meta">Gemini checks each of this job's 7 requirements against your resume.</p></div>
+      <button class="btn pri">Check match</button>
+    </div>
+  </div></div>
+</div>
+
+</main>
+</body>
+</html>
