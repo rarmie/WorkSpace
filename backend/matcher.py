@@ -7,7 +7,12 @@ import logging
 import time
 
 load_dotenv(Path(__file__).resolve().parent / ".env")
-client = genai.Client()
+client = genai.Client(
+    http_options=types.HttpOptions(
+        timeout=45_000,
+        retry_options=types.HttpRetryOptions(attempts=1)
+    )
+)
 logger = logging.getLogger(__name__)
 
 system_instruction = """Judge how well the provided resume meets each of the provided job requirements.
