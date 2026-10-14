@@ -63,6 +63,20 @@ export default async function JobsPage({
       })
     : null;
 
+  // The match panel needs to know whether a resume exists and when it last changed. Only loaded
+  // when a job is open. Selecting `resume` pulls up to 15k characters just to test for null;
+  // Prisma can't select "is not null" on its own, and one row of text is cheap here.
+  const resumeInfo = selected
+    ? await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { resume: true, resumeUpdatedAt: true },
+      })
+    : null;
+  const resume = {
+    hasResume: Boolean(resumeInfo?.resume),
+    updatedAt: resumeInfo?.resumeUpdatedAt ?? null,
+  };
+
   // "Back to jobs" on a phone: same filters, no ?job.
   const backParams = new URLSearchParams();
   if (search) backParams.set("search", search);
@@ -97,7 +111,7 @@ export default async function JobsPage({
 
         <div className={`flex-1 min-w-0 md:h-full md:overflow-y-auto ${hasJobParam ? "" : "hidden md:block"}`}>
           {selected ? (
-            <JobDetail job={selected} backHref={backHref} />
+            <JobDetail job={selected} backHref={backHref} resume={resume} />
           ) : (
             <div className="flex h-full min-h-[40vh] flex-col items-center justify-center gap-3 p-10 text-sm text-muted-foreground">
               {selectedId ? "Job not found." : "Add an application to see its details here."}

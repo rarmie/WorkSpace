@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { prisma } from '@/lib/prisma'
 import { isRecordNotFound } from '@/lib/prisma-errors'
+import { verdictSchema } from '@/lib/match'
 
 // POST /api/jobs/[id]/match
 // No request body: everything comes from the database. The job gives `role` and
@@ -24,19 +25,11 @@ const MATCH_TIMEOUT_MS = 60_000
 // Mirrors FastAPI's MatchResponse. FastAPI already validates Gemini's reply, so this check guards
 // the contract between our two services: if either side changes shape, it fails here as a 502
 // instead of saving a broken row.
-const verdictSchema = z.object({
-    requirement: z.string(),
-    verdict: z.enum(['met', 'partial', 'missing']),
-    reason: z.string(),
-})
-
 const matchResponseSchema = z.object({
     verdicts: z.array(verdictSchema).min(1),
     summary: z.string(),
     score: z.int().min(0).max(100),
 })
-
-export type MatchVerdict = z.infer<typeof verdictSchema>
 
 type BackendError = { detail?: unknown }
 

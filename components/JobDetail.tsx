@@ -5,6 +5,7 @@ import { PIPELINE_ORDER, companyInitial } from '@/lib/job-status'
 import JobStatusControl from '@/components/JobStatusControl'
 import EditJobDialog from '@/components/EditJobDialog'
 import DeleteJobButton from '@/components/DeleteJobButton'
+import JobMatchPanel from '@/components/JobMatchPanel'
 
 export type JobWithRelations = Prisma.JobApplicationGetPayload<{
   include: { contacts: true; documents: true }
@@ -31,7 +32,15 @@ function Fact({ label, children, className = '' }: { label: string; children: Re
   )
 }
 
-export default function JobDetail({ job, backHref }: { job: JobWithRelations; backHref: string }) {
+export default function JobDetail({
+  job,
+  backHref,
+  resume,
+}: {
+  job: JobWithRelations
+  backHref: string
+  resume: { hasResume: boolean; updatedAt: Date | null }
+}) {
   const pipelineIdx = PIPELINE_ORDER.indexOf(job.status)
 
   return (
@@ -91,7 +100,22 @@ export default function JobDetail({ job, backHref }: { job: JobWithRelations; ba
         </div>
       )}
 
-      <div className={`grid gap-6 lg:grid-cols-[1.2fr_1fr] ${job.status === 'REJECTED' ? 'mt-6' : ''}`}>
+      {/* Full width under the pipeline bar (or the header, for a rejected job, which has no bar). */}
+      <div className={`mb-6 ${job.status === 'REJECTED' ? 'mt-6' : ''}`}>
+        <JobMatchPanel
+          key={job.id}
+          jobId={job.id}
+          requirementCount={job.requirements.length}
+          hasResume={resume.hasResume}
+          resumeUpdatedAt={resume.updatedAt}
+          matchScore={job.matchScore}
+          matchSummary={job.matchSummary}
+          matchVerdicts={job.matchVerdicts}
+          matchedAt={job.matchedAt}
+        />
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
         <div className="space-y-6 min-w-0">
           <div className="grid grid-cols-2 gap-3">
             <Fact label="Salary">{job.salary ?? 'N/A'}</Fact>
