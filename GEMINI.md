@@ -50,7 +50,7 @@ A full-stack application for tracking job applications, including status updates
 ## Key Files
 - `prisma/schema.prisma`: Defines the database models (`JobApplication`, `Contact`, `Document`).
 - `lib/prisma.ts`: Initializes the Prisma client with the PostgreSQL adapter.
-- `middleware.ts`: Handles authentication protection for specific routes.
+- `proxy.ts` (Next 16 rename of `middleware.ts`): Handles authentication protection for specific routes.
 - `app/api/auth/[...nextauth]/route.ts`: Configures NextAuth.
 
 

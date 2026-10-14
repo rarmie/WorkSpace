@@ -1,6 +1,6 @@
 // Turns a fetch Response from our /api routes into an error message, or null on success.
 //
-// The 307 trap: middleware.ts answers an unauthenticated /api/jobs request with a redirect to
+// The 307 trap: proxy.ts answers an unauthenticated /api/jobs request with a redirect to
 // /login, not a JSON 401. fetch follows it, so the client sees status 200 and res.ok === true
 // with the login page's HTML. res.redirected is the reliable sign of an expired session.
 export async function messageFromResponse(res: Response): Promise<string | null> {
