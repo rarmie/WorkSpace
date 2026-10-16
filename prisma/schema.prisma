@@ -21,6 +21,15 @@ enum ConcernStatus{
   RESOLVED
 }
 
+enum ApplicationSource{
+  LINKEDIN
+  INDEED
+  JOBSTREET
+  COMPANY_SITE
+  REFERRAL
+  OTHER
+}
+
 model JobApplication {
   id String @id @default(cuid())
   userId String 
@@ -38,6 +47,9 @@ model JobApplication {
   matchVerdicts Json?
   matchSummary String?
   matchedAt DateTime?
+  source ApplicationSource?
+  nextAction String?
+  nextActionAt DateTime?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
