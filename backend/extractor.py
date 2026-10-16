@@ -1,10 +1,11 @@
-from google import genai
-from google.genai import types
 from dotenv import load_dotenv
 from backend.schemas import ExtractResponse
+from openai import AsyncOpenAI
 from pathlib import Path
 import logging
 import time
+import os
+
 
 system_instruction = """Extract the requested information from the provided job posting.
 
@@ -26,39 +27,46 @@ STRICT EXTRACTION RULES:
 Return the information using the provided schema."""
 
 load_dotenv(Path(__file__).resolve().parent / ".env")
-client = genai.Client(
-    http_options=types.HttpOptions(
-        timeout=20_000,
-        retry_options=types.HttpRetryOptions(attempts=1)
-    )
+client = AsyncOpenAI(
+    base_url="https://integrate.api.nvidia.com/v1",
+    api_key=os.environ["NVIDIA_API_KEY"],
+    timeout=20,
+    max_retries=0
 )
 logger = logging.getLogger(__name__)
 
 async def extract(text: str) -> ExtractResponse:
     start = time.perf_counter()
-    resp = await client.aio.models.generate_content(
-        model='gemini-3.5-flash',
-        contents=text,
-        config=types.GenerateContentConfig(
-            system_instruction=system_instruction,
-            temperature=0,
-            response_mime_type="application/json",
-            response_schema=ExtractResponse,
-            thinking_config=types.ThinkingConfig(thinking_budget=0),
-            seed=42,
-            automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True)
-        )
+    resp = await client.chat.completions.create(
+        model="openai/gpt-oss-20b",
+        messages=[
+            {
+                "role": "system",
+                "content": system_instruction
+            },
+            {
+                "role": "user",
+                "content": text
+            }
+        ],
+        temperature=0,
+        max_completion_tokens=4000,
+        response_format={
+            "type": "json_schema",
+            "json_schema": {"name": "ExtractResponse", "schema": ExtractResponse.model_json_schema()}
+        }
     )
-    finish_reason = resp.candidates[0].finish_reason if resp.candidates else None
+    elapsed = time.perf_counter() - start
 
-    usage = resp.usage_metadata
+    raw = resp.choices[0].message.content
+
+    finish_reason = resp.choices[0].finish_reason if resp.choices else None
+
     tokens = {
-        "prompt_tokens": usage.prompt_token_count or 0,
-        "output_tokens": usage.candidates_token_count or 0,
-        "thoughts_tokens": usage.thoughts_token_count or 0
+        "prompt_tokens": resp.usage.prompt_tokens or 0,
+        "output_tokens": resp.usage.completion_tokens or 0
     }
 
-    elapsed = time.perf_counter() - start
-    logger.info("input_len=%d time_taken=%.2f stopped_reason=%s tokens_in=%d tokens_out=%d think_tokens=%d", len(text), elapsed, finish_reason, tokens['prompt_tokens'], tokens['output_tokens'], tokens['thoughts_tokens'])
+    logger.info("input_len=%d time_taken=%.2f stopped_reason=%s tokens_in=%d tokens_out=%d", len(text), elapsed, finish_reason, tokens['prompt_tokens'], tokens['output_tokens'])
 
-    return ExtractResponse.model_validate_json(resp.text)
+    return ExtractResponse.model_validate_json(raw)

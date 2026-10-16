@@ -68,15 +68,15 @@ class RequirementVerdict(BaseModel):
     requirement: str = Field(
         description="The requirement being judged, as given in the requirements list."
     ) 
+    reason: str = Field(
+        description="One short sentence citing the resume evidence for the verdict, or stating none was found."
+        )
     verdict: Literal["met", "partial", "missing"] = Field(
         description=("met: the resume shows the requirement in full. "
                     "partial: related evidence that falls short, such as fewer years, a similar tool, or coursework instead of work. " 
                     "missing: no evidence.")
     )
-    reason: str = Field(
-        description="One short sentence citing the resume evidence for the verdict, or stating none was found."
-        )
-
+    
 class MatchResult(BaseModel):
     verdicts: list[RequirementVerdict] = Field(
         min_length=1,
