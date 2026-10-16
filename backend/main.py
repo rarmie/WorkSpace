@@ -1,12 +1,12 @@
 from fastapi import FastAPI, HTTPException
 from backend.schemas import ExtractRequest, ExtractResponse, HealthResponse, MatchRequest, MatchResponse
-from google.genai import errors
 from backend.extractor import extract
 from backend.fetch_posting import fetch_posting, BlockedURL, Unusable
 from backend.matcher import match, score, VerdictMismatch
 from pydantic import ValidationError
 import logging
 import httpx
+import openai
 
 
 logging.basicConfig(
@@ -57,27 +57,24 @@ async def extract_job(payload: ExtractRequest) -> ExtractResponse:
 
     try: 
         return await extract(payload)
-    except errors.ServerError as e:
-        logger.warning("Gemini is unavailable (503):%s", e)
+    except openai.InternalServerError as e:
+        logger.warning("Model is unavailable (503):%s", e)
         raise HTTPException(
             status_code=503,
-            detail="Gemini is unavailable. Try again."
+            detail="Feature is unavailable. Try again."
         ) from e
-    except httpx.TimeoutException as e:
-        logger.warning("Gemini took too long (504):%s", e)
+    except openai.APITimeoutError as e:
+        logger.warning("Model took too long (504):%s", e)
         raise HTTPException(
             status_code=504,
-            detail="Gemini took too long. Try again later."
+            detail="Extracting took too long. Try again later."
         ) from e
-    except errors.ClientError as e:
-        if e.code == 429:
-            logger.warning("Rate limit reached (429):%s", e)
-            raise HTTPException(
-                status_code=429,
-                detail="Rate limit reached. Try again later."
-            ) from e
-
-        raise
+    except openai.RateLimitError as e:
+        logger.warning("Rate limit reached (429):%s", e)
+        raise HTTPException(
+            status_code=429,
+            detail="Rate limit reached. Try again later."
+        ) from e
         
 @app.get("/health")
 def check_health() -> HealthResponse:
@@ -89,35 +86,30 @@ def check_health() -> HealthResponse:
 async def match_resume(payload: MatchRequest) -> MatchResponse:
     try:
         result = await match(payload)
-    except errors.ServerError as e:
-        logger.warning("Gemini is unavailable (503):%s", e)
+    except openai.InternalServerError as e:
+        logger.warning("Model is unavailable (503):%s", e)
         raise HTTPException(
             status_code=503,
-            detail="Gemini is unavailable. Try again later."
+            detail="Feature is unavailable. Try again later."
         ) from e
-    except httpx.TimeoutException as e:
-        logger.warning("Gemini took too long (504):%s", e)
+    except openai.APITimeoutError as e:
+        logger.warning("Model took too long (504):%s", e)
         raise HTTPException(
             status_code=504,
-            detail="Gemini took too long. Try again later."
+            detail="Matching took too long. Try again later."
         ) from e
-    except errors.ClientError as e:
-        if e.code == 429:
-            logger.warning("Rate limit reached (429):%s", e)
-            raise HTTPException(
-                status_code=429,
-                detail="Rate limit reached. Try again later."
-            ) from e
-
-        raise
-
+    except openai.RateLimitError as e:
+        logger.warning("Rate limit reached (429):%s", e)
+        raise HTTPException(
+            status_code=429,
+            detail="Rate limit reached. Try again later."
+        ) from e
     except VerdictMismatch as e:
         logger.warning("Verdicts and requirements mismatch (502):%s", e)
         raise HTTPException(
             status_code=502,
             detail="Matching failed. Try again."
         ) from e
-
     except ValidationError as e:
         logger.warning("Gateway gave a bad response (502):%s", e)
         raise HTTPException(
