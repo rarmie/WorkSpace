@@ -87,8 +87,8 @@ export default function RegisterCard(){
         <Card className="w-full max-w-md shadow-lg">
             <CardHeader className="flex flex-col justify-center items-center pt-8">
                 <img src="/124-job-tracking.svg" className="w-16 h-16 mb-2" alt="Logo"/>
-                <h3 className="text-2xl font-bold tracking-tight">Welcome to WorkSpace</h3>
-                <p className="text-sm text-muted-foreground">Create your WorkSpace account</p>
+                <h3 className="text-2xl font-bold tracking-tight">Welcome to Shortlist</h3>
+                <p className="text-sm text-muted-foreground">Create your Shortlist account</p>
             </CardHeader>
             <CardContent>
                 <Button 
