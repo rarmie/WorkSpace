@@ -10,7 +10,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "WorkSpace - Job Tracker",
+  title: "Shortlist - Job Tracker",
   description: "Track your job applications with ease",
 };
 

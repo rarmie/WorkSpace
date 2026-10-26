@@ -52,7 +52,7 @@ export default function LoginCard() {
             <CardHeader className="flex flex-col justify-center items-center pt-8">
                 <img src="/124-job-tracking.svg" className="w-16 h-16 mb-2" alt="Logo"/>
                 <h3 className="text-2xl font-bold tracking-tight">Welcome back</h3>
-                <p className="text-sm text-muted-foreground">Log in to your WorkSpace account</p>
+                <p className="text-sm text-muted-foreground">Log in to your Shortlist account</p>
             </CardHeader>
 
             <CardContent>
