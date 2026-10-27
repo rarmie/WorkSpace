@@ -68,3 +68,7 @@ CLAUDE.md
 progress.md
 
 backend/scratch/out/
+
+# discovery pipeline: raw fetch dumps are a local dev aid only (CI never
+# saves them either — docs/discovery-plan.md, Phase 6)
+pipeline/data/
