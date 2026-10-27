@@ -91,12 +91,6 @@ def fetch_board(client: httpx.Client, candidate: Candidate) -> list[dict] | None
 
     body = resp.json()
 
-    # Gotcha: Greenhouse returns HTTP 200 with {"status": 404, "error": "..."}
-    # in the body for an unknown board slug, instead of a real 404.
-    if isinstance(body, dict) and "error" in body:
-        print(f"  ! {candidate.company}: board not found ({body['error']})")
-        return None
-
     if candidate.source == "greenhouse":
         jobs = body.get("jobs", [])
         return [{"title": j.get("title", ""), "location": (j.get("location") or {}).get("name", "")} for j in jobs]

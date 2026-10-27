@@ -4,11 +4,6 @@
 # (a plain curl, not the scout script itself). A board graduates into
 # companies.toml once the scout measures at least 3 reachable, non-senior
 # engineering roles on it (docs/discovery-plan.md, Phase 0).
-#
-# Gotcha found during verification: Greenhouse returns HTTP 200 with a body
-# like {"status":404,"error":"Job not found"} for an unknown board slug.
-# scout.py must check the JSON body, not just the HTTP status code, or every
-# wrong guess looks "reachable" with zero jobs inside it.
 
 [[board]]
 company = "Canonical"
