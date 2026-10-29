@@ -21,6 +21,27 @@ enum ConcernStatus{
   RESOLVED
 }
 
+// Written by the discovery pipeline (pipeline/publish.py), not the app.
+// The app only reads this table; see docs/discovery-plan.md Phase 5.
+model DiscoveredPosting {
+  id           String    @id @default(cuid())
+  source       String
+  sourceId     String
+  company      String
+  role         String
+  level        String?
+  location     String
+  isRemote     Boolean
+  regions      String[]  @default([])
+  url          String
+  requirements String[]  @default([])
+  postedAt     DateTime?
+  firstSeenAt  DateTime
+  closedAt     DateTime?
+
+  @@unique([source, sourceId])
+}
+
 enum ApplicationSource{
   LINKEDIN
   INDEED

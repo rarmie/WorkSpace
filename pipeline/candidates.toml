@@ -1,0 +1,155 @@
+# Candidate boards for the monthly scout (pipeline/scout.py).
+#
+# Every [[board]] below has a slug verified against the live API on 28 Oct 2026
+# (a plain curl, not the scout script itself). A board graduates into
+# companies.toml once the scout measures at least 3 reachable, non-senior
+# engineering roles on it (docs/discovery-plan.md, Phase 0).
+
+[[board]]
+company = "Canonical"
+source = "greenhouse"
+slug = "canonical"
+
+[[board]]
+company = "Supabase"
+source = "ashby"
+slug = "supabase"
+
+[[board]]
+company = "CTE PH"
+source = "greenhouse"
+slug = "cteph"
+
+[[board]]
+company = "Xendit"
+source = "greenhouse"
+slug = "xendit"
+
+[[board]]
+company = "Airbnb"
+source = "greenhouse"
+slug = "airbnb"
+
+[[board]]
+company = "Okta"
+source = "greenhouse"
+slug = "okta"
+
+[[board]]
+company = "Coinbase"
+source = "greenhouse"
+slug = "coinbase"
+
+[[board]]
+company = "GitLab"
+source = "greenhouse"
+slug = "gitlab"
+
+[[board]]
+company = "Toptal"
+source = "lever"
+slug = "toptal"
+
+[[board]]
+company = "Linear"
+source = "ashby"
+slug = "linear"
+
+[[board]]
+company = "Zapier"
+source = "ashby"
+slug = "zapier"
+
+[[board]]
+company = "PostHog"
+source = "ashby"
+slug = "posthog"
+
+[[board]]
+company = "Grafana Labs"
+source = "greenhouse"
+slug = "grafanalabs"
+
+[[board]]
+company = "Twilio"
+source = "greenhouse"
+slug = "twilio"
+
+[[board]]
+company = "OpenAI"
+source = "ashby"
+slug = "openai"
+
+[[board]]
+company = "Stripe"
+source = "greenhouse"
+slug = "stripe"
+
+[[board]]
+company = "Mozilla"
+source = "greenhouse"
+slug = "mozilla"
+
+[[board]]
+company = "Wikimedia Foundation"
+source = "greenhouse"
+slug = "wikimedia"
+
+[[board]]
+company = "1Password"
+source = "ashby"
+slug = "1password"
+
+[[board]]
+company = "Kraken"
+source = "lever"
+slug = "kraken"
+
+[[board]]
+company = "ClickUp"
+source = "ashby"
+slug = "clickup"
+
+[[board]]
+company = "n8n"
+source = "ashby"
+slug = "n8n"
+
+[[board]]
+company = "Tailscale"
+source = "greenhouse"
+slug = "tailscale"
+
+[[board]]
+company = "Sentry"
+source = "ashby"
+slug = "sentry"
+
+[[board]]
+company = "Ashby"
+source = "ashby"
+slug = "ashby"
+
+[[board]]
+company = "Binance"
+source = "greenhouse"
+slug = "binance"
+
+[[board]]
+company = "Consensys"
+source = "greenhouse"
+slug = "consensys"
+
+[[board]]
+company = "Ninja Van"
+source = "lever"
+slug = "ninjavan"
+
+# Not yet resolved: no working slug found on greenhouse/lever/ashby as of
+# 28 Oct 2026 (one straightforward guess per source tried; some use a
+# different ATS entirely, e.g. Workday, which is Phase 8 scope at the
+# earliest). Worth another look if a source is added later, or if someone
+# finds the real board link by hand.
+#
+#   Crypto.com, Sprout Solutions, Thinking Machines, Grab, Canva, Doist,
+#   Hotjar, Remote.com, Deel, DuckDuckGo, PayMongo, Kumu, GCash/Mynt
