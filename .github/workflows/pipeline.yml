@@ -1,0 +1,31 @@
+name: Discovery pipeline
+
+on:
+  schedule:
+    - cron: "17 19 * * *" # daily, 19:17 UTC = 03:17 Manila. Off the :00 mark, where GitHub queues are busiest.
+  workflow_dispatch: # manual "Run workflow" button, for testing
+
+permissions:
+  contents: read # the job only needs to read the repo
+
+concurrency:
+  group: discovery-pipeline
+  cancel-in-progress: false # never kill a run halfway through its database writes
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pipeline/requirements.txt
+      - run: pip install -r pipeline/requirements.txt
+      # No upload-artifact step on purpose: this repo is public, and raw postings
+      # (recruiter names and emails) must never become downloadable.
+      - run: python -m pipeline.run
+        env:
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}

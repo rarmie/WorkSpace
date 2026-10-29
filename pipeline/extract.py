@@ -10,7 +10,9 @@ must be exactly what the source returned — no reformatting, no reparsing.
 
 from __future__ import annotations
 
+import argparse
 import logging
+import sys
 import time
 import tomllib
 from datetime import date
@@ -74,8 +76,12 @@ def load_companies(path: Path) -> list[dict]:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--date", default=date.today().isoformat())
+    args = parser.parse_args()
+
     companies = load_companies(COMPANIES_PATH)
-    out_dir = DATA_ROOT / date.today().isoformat()
+    out_dir = DATA_ROOT / args.date
     out_dir.mkdir(parents=True, exist_ok=True)
 
     saved = 0
@@ -92,6 +98,12 @@ def main() -> None:
                 time.sleep(REQUEST_DELAY_SECONDS)
 
     logger.info("Done: %d/%d companies saved to %s", saved, len(companies), out_dir)
+
+    # Every fetch failing means the later phases would skip every board and still
+    # exit 0. Fail here so a total outage shows up as a failed run.
+    if saved == 0:
+        logger.error("no company was fetched - aborting the run")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
