@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, TriangleAlert } from 'lucide-react'
 import { Prisma } from '@/lib/generated/prisma/client'
 import { PIPELINE_ORDER, companyInitial } from '@/lib/job-status'
 import JobStatusControl from '@/components/JobStatusControl'
@@ -8,7 +8,7 @@ import DeleteJobButton from '@/components/DeleteJobButton'
 import JobMatchPanel from '@/components/JobMatchPanel'
 
 export type JobWithRelations = Prisma.JobApplicationGetPayload<{
-  include: { contacts: true; documents: true }
+  include: { contacts: true; documents: true; posting: { select: { closedAt: true } } }
 }>
 
 // appliedAt is a calendar date (the edit form sends yyyy-MM-dd, stored as UTC midnight),
@@ -92,6 +92,15 @@ export default function JobDetail({
           />
         </div>
       </div>
+
+      {/* Set by the discovery pipeline when the company takes the listing down. The saved copy
+          (requirements, notes) is unaffected. */}
+      {job.posting?.closedAt && (
+        <p className="mt-4 flex items-center gap-2 rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-[13px] font-semibold text-amber-700 dark:text-amber-300">
+          <TriangleAlert className="size-4 shrink-0" />
+          Posting closed. The company has taken this listing down. Your saved copy is unchanged.
+        </p>
+      )}
 
       {job.status !== 'REJECTED' && (
         <div className="flex items-center gap-1.5 my-6" aria-label={`Step ${pipelineIdx + 1} of ${PIPELINE_ORDER.length}`}>

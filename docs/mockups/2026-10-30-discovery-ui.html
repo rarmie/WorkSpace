@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Discovery UI, chosen 30 Oct 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#06080d;color:#e7ebf3;font:13px/1.5 'Outfit',system-ui,sans-serif}
+  .wrap{max-width:1180px;margin:0 auto;padding:18px 20px 60px}
+  h1.page{font:700 20px/1.2 'Outfit';margin:0 0 4px;letter-spacing:-.01em}
+  .lead{color:#8590a6;margin:0 0 14px;max-width:900px}
+  .controls{display:flex;flex-wrap:wrap;gap:18px;align-items:center;margin:0 0 14px;padding:10px 12px;border:1px solid #2a3448;border-radius:10px;background:#0e1320}
+  .grpc{display:flex;align-items:center;gap:6px}
+  .grpc>span{color:#8590a6;font-size:11px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-right:2px}
+  .seg{display:flex;border:1px solid #2a3448;border-radius:8px;overflow:hidden}
+  .seg button{all:unset;cursor:pointer;padding:5px 12px;color:#aab3c6;font-size:12.5px}
+  .seg button.on{background:#34d399;color:#06281c;font-weight:700}
+  .note{color:#8590a6;font-size:12px;margin:10px 2px 0}
+  .note b{color:#e7ebf3}
+
+  /* App look, same tokens as docs/mockups/2026-10-09-jobs-page-midnight.html */
+  .m{font:13px/1.45 'Outfit',system-ui,sans-serif;color:var(--ink);background:var(--bg);border:1px solid var(--frame);border-radius:12px;overflow:hidden;min-height:560px;position:relative}
+  .m.dark{--bg:#0a0e16;--topbg:#0e1320;--card:#131a29;--line:#1d2636;--div:#2c3850;--ls:#2a3448;--frame:#2a3448;--ink:#e7ebf3;--sub:#8590a6;--pri:#34d399;--onp:#06281c;--nav:#182132;--sel:#15241f;--selring:#1f4d3c;--av:#1b2436;--avink:#c9d2e3;--track:#1f2a3b;--chip:#1a2335;--chipink:#c4cde0;--link:#6ee7b7;--app:#6ee7b7;--appbg:rgba(52,211,153,.13);--int:#fcd34d;--off:#e879f9;--rej:#f87171;--warn:#fcd34d;--warnbg:rgba(252,211,77,.1);--topshadow:0 1px 0 rgba(0,0,0,.35);--hover:#101826}
+  .m.la{--bg:#f4f6f9;--topbg:#ffffff;--card:#ffffff;--line:#e3e7ee;--div:#d5dbe5;--ls:#d5dbe5;--frame:#d5dbe5;--ink:#0f172a;--sub:#5f6b80;--pri:oklch(0.511 0.262 276.97);--onp:#ffffff;--nav:#eef1f5;--sel:#eef2ff;--selring:#c7d2fe;--av:#e8ecf2;--avink:#334155;--track:#e2e7ef;--chip:#eef1f5;--chipink:#334155;--link:#4338ca;--app:#4338ca;--appbg:#e0e7ff;--int:#d97706;--off:#c026d3;--rej:#dc2626;--warn:#b45309;--warnbg:#fef3c7;--topshadow:0 1px 3px rgba(15,23,42,.06);--hover:#fafbfd}
+  .m .sp{flex:1}.m .sub{color:var(--sub)}
+  .m .top{display:flex;align-items:center;gap:14px;padding:10px 18px;background:var(--topbg);border-bottom:1px solid var(--div);box-shadow:var(--topshadow)}
+  .m .brand{display:flex;align-items:center;gap:7px;font-weight:700;font-size:14px}
+  .m .logo{width:22px;height:22px;border-radius:7px;background:var(--pri);color:var(--onp);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+  .m nav{display:flex;gap:4px}.m nav span{padding:5px 10px;border-radius:7px;color:var(--sub)}.m nav .on{background:var(--nav);color:var(--ink);font-weight:600}
+  .m .ico{color:var(--sub);padding:0 4px}
+  .m .page{padding:18px 24px 26px;max-width:980px}
+  .m h1{margin:0;font:700 22px/1.1 'Outfit';letter-spacing:-.02em}
+  .m .head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .m .btn{all:unset;box-sizing:border-box;cursor:pointer;height:28px;padding:0 12px;border-radius:7px;background:var(--pri);color:var(--onp);display:inline-flex;align-items:center;font-weight:600;white-space:nowrap;font-size:12.5px}
+  .m .bo{all:unset;box-sizing:border-box;cursor:pointer;height:28px;padding:0 11px;font-size:12.5px;border-radius:7px;border:1px solid var(--ls);display:inline-flex;align-items:center;background:var(--card);color:var(--ink);white-space:nowrap}
+  .m .bo:hover{background:var(--nav)}
+  .m .ghost{all:unset;box-sizing:border-box;cursor:pointer;height:28px;padding:0 9px;font-size:12.5px;border-radius:7px;color:var(--sub);display:inline-flex;align-items:center}
+  .m .ghost:hover{background:var(--nav);color:var(--ink)}
+  .m .search{width:260px;height:32px;border:1px solid var(--ls);border-radius:8px;background:var(--card);color:var(--sub);display:flex;align-items:center;padding:0 11px}
+  .m .sec{display:flex;align-items:baseline;gap:10px;margin:22px 0 8px}
+  .m .sec h2{margin:0;font:700 15px 'Outfit'}
+  .m .lbl{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--sub)}
+  .m a.lk{color:var(--link);cursor:pointer}
+  .m .ph{border:1px dashed var(--ls);border-radius:10px;padding:14px;color:var(--sub);display:grid;grid-template-columns:repeat(4,1fr);gap:10px;text-align:center}
+  .m .ph i{display:block;border-radius:8px;background:var(--card);border:1px solid var(--line);padding:12px 6px;font-style:normal}
+  .m .ph i b{display:block;font-size:20px;color:var(--ink)}
+
+  /* Feed items */
+  .m .feed{display:flex;flex-direction:column;gap:8px}
+  .m .item{border:1px solid var(--line);background:var(--card);border-radius:12px;display:flex;align-items:center;gap:12px;padding:10px 12px;transition:opacity .15s}
+  .m .item:hover{border-color:var(--ls)}
+  .m .av{width:34px;height:34px;border-radius:9px;background:var(--av);color:var(--avink);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+  .m .role{font-weight:600;font-size:14px;line-height:1.25}
+  .m .meta{color:var(--sub);font-size:12.5px;display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:2px}
+  .m .tag{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:1px 8px;font-size:11px;font-weight:600;background:var(--appbg);color:var(--app)}
+  .m .tag.rem{background:var(--chip);color:var(--chipink)}
+  .m .acts{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0}
+  .m .done{display:inline-flex;align-items:center;gap:6px;color:var(--app);font-weight:600;font-size:12.5px;padding-right:4px}
+  .m .item.card{align-items:flex-start;flex-direction:column;gap:9px;padding:13px 14px}
+  .m .item.card .top2{display:flex;align-items:center;gap:12px;width:100%}
+  .m .chips{display:flex;flex-wrap:wrap;gap:5px}
+  .m .chip{padding:2px 8px;border-radius:7px;background:var(--chip);color:var(--chipink);font-size:11.5px}
+  .m .item.card .foot{display:flex;align-items:center;gap:8px;width:100%;border-top:1px solid var(--line);padding-top:9px}
+  .m .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .m .item.card.sav{border-color:var(--selring);background:var(--sel)}
+  .m .item.sav{border-color:var(--selring);background:var(--sel)}
+
+  /* Discover bits */
+  .m .prefs{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 12px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-bottom:10px}
+  .m .toggle{display:inline-flex;align-items:center;gap:8px;color:var(--sub);cursor:pointer;user-select:none}
+  .m .sw{width:30px;height:17px;border-radius:999px;background:var(--track);position:relative;flex-shrink:0;transition:background .15s}
+  .m .sw::after{content:"";position:absolute;left:2px;top:2px;width:13px;height:13px;border-radius:50%;background:var(--ink);transition:left .15s}
+  .m .toggle.on .sw{background:var(--pri)}.m .toggle.on .sw::after{left:15px;background:var(--onp)}
+  .m .pager{display:flex;align-items:center;gap:8px;margin-top:12px;color:var(--sub)}
+
+  /* States */
+  .m .empty{border:1px dashed var(--ls);border-radius:12px;padding:22px 18px;text-align:center;background:var(--card)}
+  .m .empty h3{margin:0 0 4px;font:700 15px 'Outfit'}
+  .m .empty p{margin:0 auto 12px;max-width:430px;color:var(--sub)}
+  .m .banner{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 12px;color:var(--sub);display:flex;gap:8px;align-items:center;margin-bottom:10px;font-size:12.5px}
+  .m .closed{border:1px solid var(--warn);background:var(--warnbg);color:var(--warn);border-radius:10px;padding:8px 12px;font-weight:600;display:flex;gap:8px;align-items:center;font-size:12.5px}
+  .m .fact{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--card)}
+  .m .fact .v{font-weight:600;margin-top:3px;font-size:13px}
+  .m .stat3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#e7ebf3;color:#0a0e16;border-radius:10px;padding:9px 12px 9px 16px;display:none;align-items:center;gap:14px;font-weight:600;box-shadow:0 8px 28px rgba(0,0,0,.45);z-index:50}
+  .toast.show{display:flex}.toast button{all:unset;cursor:pointer;color:#0b7a55;font-weight:700;padding:2px 6px;border-radius:5px}.toast button:hover{background:rgba(0,0,0,.07)}
+  .hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 class="page">Phase 7c: the discovery UI, chosen 30 Oct 2026</h1>
+  <p class="lead">Postings from the daily pipeline, filtered by the preferences saved on <code>/profile</code>. Save puts a posting in <code>/jobs</code> as WISHLIST with no applied date. Dismiss hides it, with an Undo. <b>Everything here is clickable</b>: try Save and Dismiss on the items.</p>
+
+  <div class="controls">
+    <div class="grpc"><span>Screen</span><div class="seg" id="seg-screen">
+      <button data-v="dash" class="on">Dashboard</button><button data-v="disc">/discover</button><button data-v="empty">Empty feeds</button><button data-v="saved">After saving</button>
+    </div></div>
+    <div class="grpc"><span>Theme</span><div class="seg" id="seg-theme">
+      <button data-v="dark" class="on">Dark</button><button data-v="la">Light</button>
+    </div></div>
+  </div>
+
+  <div id="stage"></div>
+  <p class="note" id="caption"></p>
+</div>
+<div class="toast" id="toast"><span id="toast-text"></span><button id="toast-undo">Undo</button></div>
+
+<script>
+const POSTS = [
+  {c:'Canonical', r:'Software Engineer, Python', loc:'Remote', reg:'APAC', posted:'Posted 1 day ago', reqs:['Python','Linux','Git','Open source','Written English']},
+  {c:'Supabase', r:'Full-Stack Developer', loc:'Remote', reg:'Worldwide', posted:'Posted 3 days ago', reqs:['TypeScript','PostgreSQL','React','REST APIs']},
+  {c:'CTE PH', r:'Junior Backend Engineer', loc:'Manila, PH', reg:'Hybrid', posted:'Posted 4 days ago', reqs:['Node.js','SQL','Git','Teamwork']},
+  {c:'Canonical', r:'Backend Engineer, Kubeflow', loc:'Remote', reg:'APAC', posted:'Seen 5 days ago', reqs:['Python','Kubernetes','Go','CI/CD']},
+  {c:'Supabase', r:'Frontend Engineer', loc:'Remote', reg:'Worldwide', posted:'Posted 1 week ago', reqs:['React','TypeScript','CSS','Accessibility']},
+  {c:'CTE PH', r:'QA Automation Engineer', loc:'Manila, PH', reg:'Onsite', posted:'Posted 1 week ago', reqs:['Selenium','JavaScript','Test plans']},
+  {c:'Canonical', r:'Site Reliability Engineer', loc:'Remote', reg:'Worldwide', posted:'Posted 9 days ago', reqs:['Linux','Python','Networking','Ansible']},
+  {c:'Supabase', r:'Solutions Engineer', loc:'Remote', reg:'APAC', posted:'Posted 12 days ago', reqs:['PostgreSQL','Customer-facing','APIs']},
+];
+const S = {screen:'dash', style:'A', theme:'dark', noRegion:false, dismissed:new Set(), saved:new Set()};
+let undoIdx = null, toastTimer = null;
+
+const topbar = (on) => `<div class="top"><span class="brand"><span class="logo">S</span>Shortlist</span>
+  <nav><span class="${on==='dash'?'on':''}">Dashboard</span><span class="${on==='disc'?'on':''}">Discover</span><span>Jobs</span></nav>
+  <span class="sp"></span><span class="ico">☀ ?</span><span class="av" style="width:26px;height:26px;border-radius:50%;font-size:11px">R</span></div>`;
+
+function acts(i){
+  if (S.saved.has(i)) return `<span class="done">✓ Saved to Wishlist</span><button class="bo">View in Jobs</button>`;
+  return `<button class="btn" onclick="save(${i})">Save</button><button class="bo" onclick="dismiss(${i})">Dismiss</button><a class="bo">Apply ↗</a>`;
+}
+function item(i, style){
+  const p = POSTS[i], sav = S.saved.has(i) ? ' sav' : '';
+  const loc = `<span>${p.loc}</span><span class="tag ${/Hybrid|Onsite/.test(p.reg)?'rem':''}">${p.reg}</span>`;
+  if (style === 'A') return `<div class="item${sav}"><div class="av">${p.c[0]}</div>
+    <div><div class="role">${p.r}</div><div class="meta"><b style="color:var(--ink);font-weight:600">${p.c}</b>${loc}<span>${p.posted}</span></div></div>
+    <div class="acts">${acts(i)}</div></div>`;
+  const chips = p.reqs.slice(0,3).map(x=>`<span class="chip">${x}</span>`).join('') + (p.reqs.length>3?`<span class="chip">+${p.reqs.length-3}</span>`:'');
+  return `<div class="item card${sav}"><div class="top2"><div class="av">${p.c[0]}</div>
+    <div><div class="role">${p.r}</div><div class="meta"><b style="color:var(--ink);font-weight:600">${p.c}</b>${loc}</div></div></div>
+    <div class="chips">${chips}</div>
+    <div class="foot"><span class="sub">${p.posted}</span><span class="sp"></span>${acts(i)}</div></div>`;
+}
+const visible = () => POSTS.map((_,i)=>i).filter(i => !S.dismissed.has(i));
+const feed = (idx, style) => `<div class="feed" style="${style==='B'?'display:grid;grid-template-columns:1fr 1fr;gap:10px':''}">${idx.map(i => item(i, style)).join('')}</div>`;
+
+function dash(){
+  return `<div class="m ${S.theme}">${topbar('dash')}<div class="page">
+    <div class="head"><h1>Dashboard</h1></div>
+    <div class="ph"><i><b>12</b>Applied</i><i><b>3</b>Interview</i><i><b>1</b>Offer</i><i><b>5</b>Wishlist</i></div>
+    <div class="lbl" style="margin-top:6px;text-align:center">Existing dashboard content, unchanged</div>
+    <div class="sec"><h2>New postings</h2><span class="sub">matching your preferences</span><span class="sp"></span><a class="lk">See all in Discover →</a></div>
+    ${feed(visible().slice(0,5), 'A')}
+    ${visible().length===0?'<div class="empty"><h3>All caught up</h3><p>You have dismissed or saved everything that matches right now. New postings arrive daily.</p></div>':''}
+  </div></div>`;
+}
+function disc(){
+  const idx = visible();
+  return `<div class="m ${S.theme}">${topbar('disc')}<div class="page">
+    <div class="head"><h1>Discover</h1><span class="sp"></span><div class="search">⌕ Search company or role…</div></div>
+    <div class="prefs"><span class="lbl">Matching</span>
+      <span class="chip">Full-Stack Developer</span><span class="chip">Backend Engineer</span><span class="chip">Junior to Mid</span>
+      <span class="chip">Remote · Hybrid</span><span class="chip">PH · APAC</span><span class="sp"></span><a class="lk">Edit preferences →</a></div>
+    <div style="display:flex;align-items:center;gap:12px;margin:0 2px 10px">
+      <span class="sub"><b style="color:var(--ink)">${idx.length}</b> postings · newest posted 1 day ago</span><span class="sp"></span>
+      <span class="toggle ${S.noRegion?'on':''}" onclick="S.noRegion=!S.noRegion;render()"><span class="sw"></span>Show remote postings with no stated region</span></div>
+    ${feed(idx, 'B')}
+    <div class="pager"><button class="bo" disabled style="opacity:.5">← Previous</button><span>1–${idx.length} of ${idx.length+54}</span><button class="bo">Next →</button></div>
+  </div></div>`;
+}
+function empty(){
+  return `<div class="m ${S.theme}">${topbar('dash')}<div class="page">
+    <div class="head"><h1>Dashboard</h1></div>
+    <div class="sec" style="margin-top:4px"><h2>New postings</h2><span class="sp"></span></div>
+    <div class="lbl" style="margin:0 0 6px">1 · Preferences not set yet: feed is unfiltered, with a note</div>
+    <div class="banner">ⓘ Showing every open posting. <a class="lk">Set your job preferences</a> to see only the ones that fit you.</div>
+    ${feed([0,1,2], 'A')}
+    <div class="lbl" style="margin:20px 0 6px">2 · Preferences set, nothing matches</div>
+    <div class="empty"><h3>Nothing matches your preferences today</h3><p><b style="color:var(--ink)">62</b> open postings were filtered out. New ones are added daily. You can browse them all, or widen your preferences.</p>
+      <button class="btn">Browse all in Discover</button> <button class="bo" style="margin-left:6px">Edit preferences</button></div>
+    <div class="lbl" style="margin:20px 0 6px">3 · Pipeline has no postings at all (first days, or a failed run)</div>
+    <div class="empty"><h3>No postings yet</h3><p>The daily update hasn't loaded any postings. Check back tomorrow.</p></div>
+  </div></div>`;
+}
+function saved(){
+  return `<div class="m ${S.theme}">${topbar('disc')}<div class="page">
+    <div class="head"><h1>Discover</h1></div>
+    <div class="lbl" style="margin:0 0 6px">1 · After Save: the card shows it, the posting stays in the list but can't be saved twice (409)</div>
+    <div class="feed" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${(()=>{const keep=new Set(S.saved);S.saved=new Set([1]);const h=item(1,'B');S.saved=keep;return h})()}${item(2,'B')}</div>
+    <div class="lbl" style="margin:22px 0 6px">2 · On /jobs: the saved job is WISHLIST with no applied date (7a)</div>
+    <div class="item" style="flex-direction:column;align-items:stretch;gap:10px;padding:14px">
+      <div style="display:flex;align-items:center;gap:12px"><div class="av" style="width:44px;height:44px;font-size:18px">S</div>
+        <div><div style="font:700 20px/1.15 Outfit;letter-spacing:-.02em">Supabase</div><div class="sub">Full-Stack Developer</div></div>
+        <span class="sp"></span><span class="tag rem" style="padding:3px 10px">Wishlist</span><span class="bo">Edit</span><span class="bo">Delete</span></div>
+      <div class="stat3"><div class="fact"><div class="lbl">Applied</div><div class="v">Not applied yet</div></div><div class="fact"><div class="lbl">Source</div><div class="v">Company site</div></div><div class="fact"><div class="lbl">Link</div><div class="v lk" style="color:var(--link)">supabase.com/careers/…</div></div></div>
+    </div>
+    <div class="lbl" style="margin:22px 0 6px">3 · Later, when the company removes the posting</div>
+    <div class="closed">⚠ Posting closed — the company has taken this listing down. Your saved copy and notes are unchanged.</div>
+  </div></div>`;
+}
+const SCREENS = {dash, disc, empty, saved};
+const CAPTIONS = {
+  dash: '<b>Dashboard (rows):</b> a compact "New postings" section under the existing content, first 5 from the feed, one per row. Each shows company, role, location, how recent, and Save / Dismiss / Apply. A quiet feed reads as quiet because every item shows its posted date.',
+  disc: '<b>/discover (cards):</b> the list as two columns of cards, each with its first three requirements, with paging, search, a summary of the active filters (edit on /profile), and the toggle for remote postings with no stated region.',
+  empty: '<b>Empty feeds:</b> three different reasons, three different messages, each with a way out.',
+  saved: '<b>Saving:</b> what Save changes on the card, on <code>/jobs</code>, and what a closed posting looks like later. (Switch to Dismiss on Dashboard to try the Undo toast.)'
+};
+function render(){
+  document.getElementById('stage').innerHTML = SCREENS[S.screen]();
+  document.getElementById('caption').innerHTML = CAPTIONS[S.screen];
+  for (const [id,key] of [['seg-screen','screen'],['seg-theme','theme']])
+    document.querySelectorAll('#'+id+' button').forEach(b => b.classList.toggle('on', b.dataset.v === S[key]));
+}
+function save(i){ S.saved.add(i); render(); }
+function dismiss(i){
+  S.dismissed.add(i); undoIdx = i; render();
+  document.getElementById('toast-text').textContent = 'Dismissed · ' + POSTS[i].c + ', ' + POSTS[i].r;
+  const t = document.getElementById('toast'); t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 6000);
+}
+document.getElementById('toast-undo').onclick = () => {
+  if (undoIdx !== null) S.dismissed.delete(undoIdx);
+  undoIdx = null; document.getElementById('toast').classList.remove('show'); render();
+};
+for (const [id,key] of [['seg-screen','screen'],['seg-theme','theme']])
+  document.getElementById(id).addEventListener('click', e => { if (e.target.dataset.v){ S[key] = e.target.dataset.v; render(); }});
+render();
+</script>
+</body>
+</html>

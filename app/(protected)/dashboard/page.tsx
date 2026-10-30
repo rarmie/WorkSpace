@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { prisma } from "@/lib/prisma"
 import { Card, CardContent } from "@/components/ui/card"
+import NewPostings from "@/components/NewPostings"
 
 const STATS = [
   { status: "APPLIED", label: "Applied" },
@@ -42,6 +43,8 @@ export default async function DashboardPage() {
           </Card>
         ))}
       </div>
+
+      <NewPostings userId={session.user.id} />
     </section>
   )
 }

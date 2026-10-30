@@ -48,6 +48,13 @@ export const ATTRIBUTE_LIMITS = {
   skillLength: 60,
 } as const
 
+// The short tag on a posting card: GLOBAL reads as "Worldwide", any other code shows as itself.
+// Lives here, not in lib/discover.ts, because that file reads the database and must stay out of
+// client components.
+export function regionLabel(code: string): string {
+  return code === 'GLOBAL' ? 'Worldwide' : code
+}
+
 // "a, b ,, A" -> ["a", "b"]. Trims, drops blanks, and drops repeats ignoring case.
 export function splitList(text: string): string[] {
   const seen = new Set<string>()
