@@ -404,6 +404,11 @@ with only a few new ones a day. Plan the UI for that:
 
 ### Phase 8: Later, optional
 
+**Status (31 Oct):** skill trends, dbt, and a heading-pattern fix are done (PRs #31 to #33). The AI
+requirements step is deferred: widening `HEADING_PATTERNS` took coverage from 92.4% to 96.7%, leaving
+13 postings (3%), 7 of them non-English. Match ranking and more sources are not started. The list
+below is the original plan.
+
 - **AI requirements** only for postings the rules missed, cached by content hash so re-runs don't
   call the model again.
 - **Match ranking:** score open postings against the stored resume in batches inside the pipeline,
