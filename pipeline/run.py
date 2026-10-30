@@ -1,6 +1,6 @@
 """Phase 6 run (docs/discovery-plan.md).
 
-Runs phases 1-5 in order and stops at the first one that fails. Each phase runs
+Runs phases 1-5, then the Phase 8 skill trends, in order and stops at the first one that fails. Each phase runs
 as its own process, so a crash or sys.exit(1) in one cannot leave another half
 finished, and the exit code tells us exactly which step broke.
 
@@ -20,7 +20,7 @@ from datetime import date
 
 # Order matters: each phase reads what the one before it wrote.
 PHASES = ["extract", "load", "stage"]  # these take --date
-FINAL_PHASE = "publish"  # reads the database only, no --date
+DB_ONLY_PHASES = ["publish", "trends"]  # read the database only, no --date
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 logger = logging.getLogger("run")
@@ -46,7 +46,8 @@ def main() -> None:
 
     for name in PHASES:
         run_phase(name, run_date)
-    run_phase(FINAL_PHASE, None)
+    for name in DB_ONLY_PHASES:
+        run_phase(name, None)
 
     logger.info("pipeline run finished")
 
