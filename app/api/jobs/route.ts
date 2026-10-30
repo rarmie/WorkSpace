@@ -34,8 +34,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
   }
 
+  // A wishlist job hasn't been applied for yet, so it gets no applied date.
+  const appliedAt = parsed.data.status === 'WISHLIST' ? null : new Date()
+
   const job = await prisma.jobApplication.create({
-    data: { ...parsed.data, userId: session.user.id },
+    data: { ...parsed.data, appliedAt, userId: session.user.id },
   })
 
   return NextResponse.json(job, { status: 201 })

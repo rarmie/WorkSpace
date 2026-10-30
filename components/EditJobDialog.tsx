@@ -35,7 +35,7 @@ const editSchema = z.object({
   link: z.union([z.url('Enter a full URL, starting with https://'), z.literal('')]),
   salary: z.string(),
   notes: z.string(),
-  appliedAt: z.string().min(1, 'Applied date is required'),
+  appliedAt: z.string(),
   requirements: z.string(),
 })
 
@@ -50,7 +50,7 @@ export type EditableJob = {
   salary: string | null
   notes: string | null
   requirements: string[]
-  appliedAt: string // ISO string; Dates are converted on the server
+  appliedAt: string | null // ISO string, or null if not applied yet; Dates are converted on the server
 }
 
 export default function EditJobDialog({ job }: { job: EditableJob }) {
@@ -95,7 +95,7 @@ function EditJobForm({ job, onClose }: { job: EditableJob; onClose: () => void }
       link: job.link ?? '',
       salary: job.salary ?? '',
       notes: job.notes ?? '',
-      appliedAt: job.appliedAt.slice(0, 10), // yyyy-MM-dd for the date input
+      appliedAt: job.appliedAt?.slice(0, 10) ?? '', // yyyy-MM-dd for the date input
       requirements: job.requirements.join('\n'),
     },
   })
@@ -106,6 +106,7 @@ function EditJobForm({ job, onClose }: { job: EditableJob; onClose: () => void }
 
     const payload = {
       ...data,
+      appliedAt: data.appliedAt || null, // an empty date input means "not applied yet"
       requirements: data.requirements
         .split('\n')
         .map((line) => line.trim())
@@ -187,7 +188,7 @@ function EditJobForm({ job, onClose }: { job: EditableJob; onClose: () => void }
             </SelectContent>
           </Select>
         </FormField>
-        <FormField id="edit-applied" label="Applied" required error={errors.appliedAt?.message}>
+        <FormField id="edit-applied" label="Applied" optional error={errors.appliedAt?.message}>
           <Input
             id="edit-applied"
             type="date"
