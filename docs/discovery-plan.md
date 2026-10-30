@@ -354,7 +354,12 @@ Once `source` from `feat/status-history-next-actions` is on `main`, Save also se
 5. Apply opens `url` in a new tab. A saved job whose posting later closes shows a "Posting closed"
    note on the job detail.
 6. Format dates on the server in Asia/Manila, as the profile page does.
-7. A mockup first (`docs/mockups/`), as with earlier UI work.
+7. A mockup first, as with earlier UI work. **Done 30 Oct:** `docs/mockups/2026-10-30-discovery-ui.html`.
+   Chosen: the dashboard's "New postings" shows compact **rows**, one per line; `/discover` shows
+   **cards**, in two columns (company, role, location and region tags, the first three requirements
+   as chips with a "+N" count, posted date, then Save / Dismiss / Apply). The mockup also shows
+   the filter summary strip, the three empty-feed states, the saved card, and the "Posting closed"
+   banner.
 
 *Done when:* a posting from the pipeline can be saved and then appears in `/jobs` as WISHLIST with
 no applied date. A dismissed posting leaves the feed, and Undo brings it back.
