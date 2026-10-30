@@ -4,6 +4,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { prisma } from '@/lib/prisma'
 import UserAvatar from '@/components/UserAvatar'
 import ResumeForm from '@/components/ResumeForm'
+import AttributesForm from '@/components/AttributesForm'
 
 // Dates are formatted here, on the server, which runs in UTC. Without a fixed time zone a
 // resume saved before 8am in Manila would show the previous day (the same bug that is still
@@ -38,6 +39,13 @@ export default async function ProfilePage() {
       createdAt: true,
       resume: true,
       resumeUpdatedAt: true,
+      targetRoles: true,
+      country: true,
+      workArrangements: true,
+      remoteRegions: true,
+      seniority: true,
+      skills: true,
+      attributesUpdatedAt: true,
       accounts: { select: { provider: true } },
       _count: { select: { applications: true } },
     },
@@ -50,6 +58,13 @@ export default async function ProfilePage() {
 
   // A user who signed up with a password and later linked Google shows as Google here.
   const isGoogle = user.accounts.some((a) => a.provider === 'google')
+
+  // Only meaningful once both have been saved: "changed since" has no answer for a user who never
+  // saved preferences.
+  const resumeChanged =
+    user.resumeUpdatedAt !== null &&
+    user.attributesUpdatedAt !== null &&
+    user.resumeUpdatedAt > user.attributesUpdatedAt
 
   return (
     <div className="mx-auto w-full max-w-6xl px-6 py-6">
@@ -89,12 +104,31 @@ export default async function ProfilePage() {
           </dl>
         </section>
 
-        <section aria-label="Resume" className="flex flex-col rounded-xl border border-border bg-card">
-          <ResumeForm
-            initialResume={user.resume ?? ''}
-            savedLabel={user.resumeUpdatedAt ? formatDate(user.resumeUpdatedAt, { day: 'numeric', month: 'short' }) : null}
-          />
-        </section>
+        {/* Resume and preferences sit side by side on a wide screen, and stack below that. */}
+        <div className="grid min-w-0 gap-5 lg:grid-cols-2">
+          <section aria-label="Resume" className="flex flex-col rounded-xl border border-border bg-card">
+            <ResumeForm
+              initialResume={user.resume ?? ''}
+              savedLabel={user.resumeUpdatedAt ? formatDate(user.resumeUpdatedAt, { day: 'numeric', month: 'short' }) : null}
+            />
+          </section>
+
+          <section aria-label="Job preferences" className="self-start rounded-xl border border-border bg-card">
+            <AttributesForm
+              initial={{
+                targetRoles: user.targetRoles,
+                country: user.country,
+                workArrangements: user.workArrangements,
+                remoteRegions: user.remoteRegions,
+                seniority: user.seniority,
+                skills: user.skills,
+              }}
+              savedLabel={user.attributesUpdatedAt ? formatDate(user.attributesUpdatedAt, { day: 'numeric', month: 'short' }) : null}
+              resumeChanged={resumeChanged}
+              hasResume={!!user.resume}
+            />
+          </section>
+        </div>
       </div>
     </div>
   )
