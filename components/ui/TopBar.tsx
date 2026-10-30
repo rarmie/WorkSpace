@@ -1,5 +1,5 @@
 "use client"
-import { CircleQuestionMark, Plus } from "lucide-react";
+import { Briefcase, CircleQuestionMark, Compass, LayoutDashboard, Plus } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation"
 import { useState } from "react";
@@ -11,10 +11,11 @@ import LogoutButton from "../LogoutButton";
 import ThemeToggle from "./ThemeToggle";
 import UserAvatar from "../UserAvatar";
 
+// The icon is for the tab bar at the bottom of a phone screen; the top bar shows only the name.
 const NAV_ITEMS = [
-  { name: 'Dashboard', href: '/dashboard' },
-  { name: 'Discover', href: '/discover' },
-  { name: 'Jobs', href: '/jobs' },
+  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Discover', href: '/discover', icon: Compass },
+  { name: 'Jobs', href: '/jobs', icon: Briefcase },
 ]
 
 export type TopBarUser = {
@@ -31,7 +32,12 @@ export default function TopBar({ user }: { user: TopBarUser | null }) {
   const [isAddJobOpen, setAddJobOpen] = useState(false)
 
   return (
-    <header className="relative z-10 flex items-center gap-5 px-5 py-3 border-b border-divider bg-topbar shadow-[0_1px_3px_rgb(15_23_42/0.06)] dark:shadow-[0_1px_0_rgb(0_0_0/0.35)]">
+    <>
+    {/* Below the lg breakpoint (1024px) the page links move to the tab bar at the bottom, and the
+        header is compact. The full bar needs 836px, so it can't be used any lower: at the old
+        640px switch point it overflowed anywhere up to 836px. Mockup:
+        docs/mockups/2026-10-31-phone-topbar.html. */}
+    <header className="relative z-10 flex items-center gap-2 px-3 py-2.5 lg:gap-5 lg:px-5 lg:py-3 border-b border-divider bg-topbar shadow-[0_1px_3px_rgb(15_23_42/0.06)] dark:shadow-[0_1px_0_rgb(0_0_0/0.35)]">
       {/* The bar is the raised layer: lighter than the page in both themes, with a clear line under it. */}
       <Link href="/dashboard" className="flex items-center gap-2.5 shrink-0">
         <div className="flex size-8 items-center justify-center rounded-lg bg-primary shadow-sm">
@@ -42,7 +48,7 @@ export default function TopBar({ user }: { user: TopBarUser | null }) {
         <span className="font-semibold text-sm text-foreground hidden sm:inline">Shortlist</span>
       </Link>
 
-      <nav className="flex items-center gap-1">
+      <nav className="hidden lg:flex items-center gap-1">
         {NAV_ITEMS.map((item) => (
           <Link
             key={item.href}
@@ -117,5 +123,31 @@ export default function TopBar({ user }: { user: TopBarUser | null }) {
         </Link>
       )}
     </header>
+
+    {/* The tab bar for screens under 1024px. Fixed to the bottom, under dialogs (z-50) and over the
+        page. The layout pads the page by the same height so nothing is hidden behind it. */}
+    <nav
+      aria-label="Pages"
+      className="fixed inset-x-0 bottom-0 z-20 flex border-t border-divider bg-topbar px-1.5 pt-1 pb-[max(0.5rem,env(safe-area-inset-bottom))] lg:hidden"
+    >
+      {NAV_ITEMS.map((item) => {
+        const active = isActive(item.href)
+
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            aria-current={active ? 'page' : undefined}
+            className={`flex flex-1 flex-col items-center gap-0.5 rounded-lg py-1.5 text-[11px] font-medium transition-colors ${
+              active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            <item.icon className="size-5" />
+            {item.name}
+          </Link>
+        )
+      })}
+    </nav>
+    </>
   )
 }

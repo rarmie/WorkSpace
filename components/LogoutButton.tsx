@@ -9,10 +9,12 @@ export default function LogoutButton() {
     <Button
       variant="ghost"
       onClick={() => signOut({ callbackUrl: '/login' })}
+      aria-label="Logout"
       className="justify-start text-muted-foreground hover:text-foreground"
     >
       <LogOut className="w-4 h-4" />
-      Logout
+      {/* Icon only on a phone, where the top bar has no room for the word. */}
+      <span className="hidden sm:inline">Logout</span>
     </Button>
   );
 }

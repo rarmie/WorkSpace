@@ -129,7 +129,9 @@ export default function PostingItem({
     return (
       <>
       <div className={surface}>
-        <div className="flex items-center gap-3 px-3 py-2.5">
+        {/* flex-wrap: on a phone the three buttons don't fit beside the title, so they drop to their
+            own line under it (and stay on one line on a wider screen). */}
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 px-3 py-2.5">
           {avatar}
           <div className="min-w-0 flex-1">
             <button
@@ -146,7 +148,7 @@ export default function PostingItem({
               <span>{posting.postedLabel}</span>
             </div>
           </div>
-          <div className="relative z-10 flex shrink-0 items-center gap-1.5">{actions}</div>
+          <div className="relative z-10 ml-auto flex w-full shrink-0 items-center justify-end gap-1.5 sm:w-auto">{actions}</div>
         </div>
         {error && <p className="px-3 pb-2 text-xs text-destructive">{error}</p>}
       </div>
