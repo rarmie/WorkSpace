@@ -1,0 +1,20 @@
+# dbt project for the Phase 8 analytics tables (docs/discovery-plan.md).
+# Run through `python -m pipeline.dbt_run`, which builds the connection from DIRECT_URL.
+name: shortlist
+version: "1.0.0"
+profile: shortlist
+
+# Project-wide settings (these used to live in profiles.yml).
+flags:
+  send_anonymous_usage_stats: false
+  use_colors: false
+
+model-paths: ["models"]
+test-paths: ["tests"]
+
+models:
+  shortlist:
+    # Views are free to rebuild; the final table is the one the app would read.
+    +materialized: view
+    skill_trend:
+      +materialized: table

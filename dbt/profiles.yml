@@ -1,0 +1,15 @@
+# Connection settings come from environment variables that pipeline/dbt_run.py
+# fills in from DIRECT_URL. Nothing secret is written in this file.
+shortlist:
+  target: prod
+  outputs:
+    prod:
+      type: postgres
+      host: "{{ env_var('DBT_HOST') }}"
+      port: "{{ env_var('DBT_PORT') | as_number }}"
+      user: "{{ env_var('DBT_USER') }}"
+      password: "{{ env_var('DBT_PASSWORD') }}"
+      dbname: "{{ env_var('DBT_DBNAME') }}"
+      schema: analytics # dbt's own schema. Prisma ignores it, like raw and staging.
+      sslmode: require
+      threads: 1

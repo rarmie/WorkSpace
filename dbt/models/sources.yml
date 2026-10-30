@@ -1,0 +1,17 @@
+version: 2
+
+# Tables dbt reads but does not build. `{{ source('app', 'discovered_posting') }}` in a model
+# turns into the real table name, and tells dbt this model depends on it.
+sources:
+  - name: app
+    schema: public
+    quoting:
+      identifier: true # Prisma's table and column names are mixed case, so they need quotes
+    tables:
+      - name: discovered_posting
+        identifier: DiscoveredPosting
+
+  - name: staging
+    schema: staging
+    tables:
+      - name: posting_skill # written by pipeline/tag_skills.py: one row per posting per skill
