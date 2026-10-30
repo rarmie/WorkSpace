@@ -1,8 +1,9 @@
 from fastapi import FastAPI, HTTPException
-from backend.schemas import ExtractRequest, ExtractResponse, HealthResponse, MatchRequest, MatchResponse
+from backend.schemas import ExtractRequest, ExtractResponse, HealthResponse, MatchRequest, MatchResponse, ProfileAttributes, ProfileAttributesRequest
 from backend.extractor import extract
 from backend.fetch_posting import fetch_posting, BlockedURL, Unusable
 from backend.matcher import match, score, VerdictMismatch
+from backend.profile_attributes import extract_attributes
 from pydantic import ValidationError
 import logging
 import httpx
@@ -118,3 +119,32 @@ async def match_resume(payload: MatchRequest) -> MatchResponse:
         ) from e
 
     return MatchResponse(**result.model_dump(), score=score(result.verdicts))
+
+@app.post("/profile-attributes")
+async def profile_attributes(payload: ProfileAttributesRequest) -> ProfileAttributes:
+    try:
+        return await extract_attributes(payload)
+    except openai.InternalServerError as e:
+        logger.warning("Model is unavailable (503):%s", e)
+        raise HTTPException(
+            status_code=503,
+            detail="Feature is unavailable. Try again later."
+        ) from e
+    except openai.APITimeoutError as e:
+        logger.warning("Model took too long (504):%s", e)
+        raise HTTPException(
+            status_code=504,
+            detail="Reading your resume took too long. Try again later."
+        ) from e
+    except openai.RateLimitError as e:
+        logger.warning("Rate limit reached (429):%s", e)
+        raise HTTPException(
+            status_code=429,
+            detail="Rate limit reached. Try again later."
+        ) from e
+    except ValidationError as e:
+        logger.warning("Gateway gave a bad response (502):%s", e)
+        raise HTTPException(
+            status_code=502,
+            detail="Reading your resume failed. Try again."
+        ) from e

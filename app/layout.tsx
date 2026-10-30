@@ -1,7 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
-import "./globals.css";
+import { Outfit } from "next/font/google";import "./globals.css";
 
 // Outfit for all text and headings (font-sans and font-heading both point at it in globals.css).
 const outfit = Outfit({
@@ -33,10 +32,13 @@ export default function RootLayout({
       className={`${outfit.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
+        {/* The script is passed to React as an HTML string, not as a <script> element. React 19
+            logs "Encountered a script tag while rendering React component" for a <script> in
+            JSX, and next/script's beforeInteractive would run it only after Next's JavaScript
+            loads, so a dark-mode user could see the light theme flash first. As part of the
+            server HTML, the browser runs it while parsing, before the first paint. */}
+        <div hidden suppressHydrationWarning dangerouslySetInnerHTML={{ __html: `<script>${themeInitScript}</script>` }} />
         <div className="flex flex-1">
           {children}
         </div>

@@ -42,6 +42,19 @@ model DiscoveredPosting {
   @@unique([source, sourceId])
 }
 
+enum WorkArrangement{
+  REMOTE
+  HYBRID
+  ONSITE
+}
+
+enum Seniority{
+  INTERN
+  JUNIOR
+  MID
+  SENIOR
+}
+
 enum ApplicationSource{
   LINKEDIN
   INDEED
@@ -121,6 +134,14 @@ model User{
   updatedAt DateTime @updatedAt()
   resume String?
   resumeUpdatedAt DateTime?
+  // Job-feed preferences (docs/discovery-plan.md Phase 7b). Empty or null means "no preference".
+  targetRoles String[] @default([])
+  country String?
+  workArrangements WorkArrangement[] @default([])
+  remoteRegions String[] @default([])
+  seniority Seniority?
+  skills String[] @default([])
+  attributesUpdatedAt DateTime?
 
   applications JobApplication[]
   concerns Concern[]
