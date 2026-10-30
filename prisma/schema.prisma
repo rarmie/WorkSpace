@@ -39,7 +39,25 @@ model DiscoveredPosting {
   firstSeenAt  DateTime
   closedAt     DateTime?
 
+  // Back-relations, so the feed can filter with `none: { userId }`. They are Prisma-only: the
+  // foreign keys live on JobApplication and DismissedPosting, so the pipeline's table is untouched.
+  jobs         JobApplication[]
+  dismissals   DismissedPosting[]
+
   @@unique([source, sourceId])
+}
+
+// A posting the user hid from their discovery feed. One row per user and posting; Undo deletes it.
+model DismissedPosting {
+  id        String   @id @default(cuid())
+  userId    String
+  postingId String
+  createdAt DateTime @default(now())
+
+  user    User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  posting DiscoveredPosting @relation(fields: [postingId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postingId])
 }
 
 enum WorkArrangement{
@@ -84,11 +102,19 @@ model JobApplication {
   source ApplicationSource?
   nextAction String?
   nextActionAt DateTime?
+  // The discovery posting this job was saved from. Null for jobs added by hand.
+  postingId String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // SetNull: if the pipeline ever deletes a posting, the saved job stays.
+  posting DiscoveredPosting? @relation(fields: [postingId], references: [id], onDelete: SetNull)
 
   contacts Contact[]
   documents Document[]
+
+  // Postgres treats NULLs as distinct, so any number of hand-added jobs (postingId null) never
+  // clash. A real posting can be saved once per user: a second Save is a P2002 -> 409.
+  @@unique([userId, postingId])
 }
 
 model Contact{
@@ -144,6 +170,7 @@ model User{
   attributesUpdatedAt DateTime?
 
   applications JobApplication[]
+  dismissedPostings DismissedPosting[]
   concerns Concern[]
   accounts Account[]
   sessions Session[]
