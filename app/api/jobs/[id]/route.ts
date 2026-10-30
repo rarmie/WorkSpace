@@ -14,7 +14,8 @@ const updateSchema = z.object({
   link: z.union([z.url(), z.literal('')]).optional().transform(emptyToNull),
   salary: z.string().optional().transform(emptyToNull),
   notes: z.string().optional().transform(emptyToNull),
-  appliedAt: z.coerce.date().optional(),
+  // null clears the date. null must come first: z.coerce.date() turns null into 1970-01-01.
+  appliedAt: z.union([z.null(), z.coerce.date()]).optional(),
   requirements: z.array(z.string()).optional()
 })
 
@@ -37,12 +38,27 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   }
 
   try {
+    const data = { ...parsed.data }
+
+    // Moving a job off WISHLIST means it was just applied for. Stamp today's date if it has none,
+    // unless the body sends a date. A null in the body doesn't count: an applied job needs a date.
+    if (data.status && data.status !== 'WISHLIST' && !data.appliedAt) {
+      const current = await prisma.jobApplication.findFirst({
+        where: { id, userId: session.user.id },
+        select: { status: true, appliedAt: true },
+      })
+
+      if (current?.status === 'WISHLIST' && current.appliedAt === null) {
+        data.appliedAt = new Date()
+      }
+    }
+
     const job = await prisma.jobApplication.update({
-    where: { 
+    where: {
       id: id,
       userId: session.user.id
      },
-    data: parsed.data,
+    data,
     })
 
     return NextResponse.json(job)

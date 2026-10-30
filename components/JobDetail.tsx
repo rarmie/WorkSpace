@@ -13,7 +13,8 @@ export type JobWithRelations = Prisma.JobApplicationGetPayload<{
 
 // appliedAt is a calendar date (the edit form sends yyyy-MM-dd, stored as UTC midnight),
 // so format it in UTC or it can show the previous day.
-function formatDate(date: Date): string {
+function formatDate(date: Date | null): string {
+  if (!date) return 'Not applied yet'
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
 }
 
@@ -78,7 +79,7 @@ export default function JobDetail({
               salary: job.salary,
               notes: job.notes,
               requirements: job.requirements,
-              appliedAt: job.appliedAt.toISOString(),
+              appliedAt: job.appliedAt?.toISOString() ?? null,
             }}
           />
           <DeleteJobButton

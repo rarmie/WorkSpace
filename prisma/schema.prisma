@@ -57,7 +57,7 @@ model JobApplication {
   company String
   role String 
   status ApplicationStatus @default(APPLIED)
-  appliedAt DateTime @default(now())
+  appliedAt DateTime?
   link String?
   salary String?
   notes String?
