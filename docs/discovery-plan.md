@@ -379,6 +379,11 @@ Once `source` from `feat/status-history-next-actions` is on `main`, Save also se
       is that a refresh closes it and a link can't point at one posting.
     - **No closed-posting strip.** The feed never lists closed postings. The "Posting closed" note
       remains on the saved job's own page in `/jobs`.
+11. **Phone top bar** (added 31 Oct). The shared top bar needed 657 px, so it ran off a 385 px phone.
+    Mockup: `docs/mockups/2026-10-31-phone-topbar.html`. Chosen: below the `lg` breakpoint (1024 px; the full bar needs 836 px, and a first try at 640 px overflowed up to that width)
+    the three pages move to a tab bar fixed at the bottom of the screen, and the top bar keeps the
+    logo and the buttons as icons. From 1024 px up the bar is unchanged. A two-row bar and a menu
+    button were mocked up and not chosen.
 
 *Done when:* a posting from the pipeline can be saved and then appears in `/jobs` as WISHLIST with
 no applied date. A dismissed posting leaves the feed, and Undo brings it back.

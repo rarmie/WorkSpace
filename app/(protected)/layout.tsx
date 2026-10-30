@@ -24,11 +24,15 @@ export default async function ProtectedLayout({
   return (
     <div className="min-h-full w-full flex flex-col">
       <TopBar user={user} />
-      <main className="flex-1 bg-background overflow-y-auto">
+      {/* Under 1024px the tab bar is fixed over the bottom of the screen (components/ui/TopBar.tsx),
+          so the page is padded by its height, plus the home-indicator area on a notched phone. */}
+      <main className="flex-1 bg-background overflow-y-auto pb-[calc(3.75rem+env(safe-area-inset-bottom))] lg:pb-0">
         {children}
       </main>
       {/* Shows the "Dismissed · Undo" toast from the discovery feed. */}
-      <Toaster />
+      {/* Lifts toasts above the tab bar while it shows (see --toast-bottom in app/globals.css).
+          Sonner has a separate offset at 600px and below, so both get the same value. */}
+      <Toaster offset={{ bottom: 'var(--toast-bottom)' }} mobileOffset={{ bottom: 'var(--toast-bottom)' }} />
     </div>
   )
 }

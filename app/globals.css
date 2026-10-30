@@ -139,3 +139,14 @@
     @apply font-heading;
   }
 }
+
+/* How far toasts sit above the bottom edge. Under 1024px the tab bar (components/ui/TopBar.tsx) is
+   there, so they sit above it. Read by the Toaster in app/(protected)/layout.tsx. */
+:root {
+  --toast-bottom: 1.5rem;
+}
+@media (max-width: 1023px) {
+  :root {
+    --toast-bottom: 4.75rem;
+  }
+}
