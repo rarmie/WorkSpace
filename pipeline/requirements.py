@@ -57,6 +57,19 @@ HEADING_PATTERNS = (
     "you bring",
     "you'll bring",
     "preferred experience",
+    # Added 31 Oct after reading the 27 Canonical postings the list above missed.
+    "required skills",
+    "valued skills",
+    "desirable skills",
+    "desired characteristics",
+    "skills and experience",
+    "will bring",
+    "additional skills",
+    "optional skills",
+    "nice-to-have",
+    "we value",
+    "strong candidate",
+    "lo que buscamos",  # Spanish: "what we look for in you"
 )
 
 
