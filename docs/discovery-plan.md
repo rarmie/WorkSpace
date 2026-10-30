@@ -360,6 +360,25 @@ Once `source` from `feat/status-history-next-actions` is on `main`, Save also se
    as chips with a "+N" count, posted date, then Save / Dismiss / Apply). The mockup also shows
    the filter summary strip, the three empty-feed states, the saved card, and the "Posting closed"
    banner.
+8. ~~Posting details page `/discover/[id]`~~ (built and tested 30 Oct, never committed, then dropped on 31 Oct:
+   the details open in a dialog instead, see item 10. There is no separate details page.)
+9. **Full-width `/discover`** (added 31 Oct). Mockup: `docs/mockups/2026-10-31-discover-wide.html`, layout A.
+   The page has no width cap, and the cards flow into as many columns as fit (each at least 380 px,
+   or the screen's width if that is smaller). Two other layouts were mocked up and not chosen: a
+   filters sidebar, and a table of rows.
+10. **Posting details as a modal** (added 31 Oct, replaces item 8). Mockup:
+    `docs/mockups/2026-10-31-posting-modal.html`, a centered dialog 680 px wide over the dimmed list.
+    Clicking anywhere on a card or row opens it. It shows the facts the pipeline stores (location,
+    region, posted, first seen, seniority, source) and every requirement in full, with Save, Dismiss
+    and Apply. The title and those buttons stay in view, and the facts and requirements scroll inside
+    the dialog when the window is too short. Esc, the close button, or a click outside closes it.
+    Save and Dismiss keep the user in the dialog, and Dismiss shows a strip with Undo. A side drawer
+    was mocked up and not chosen.
+    - **No URL.** The dialog opens from the data already on the card, so it appears at once. Opening
+      it through `?posting=<id>` meant a server round trip, 2 to 4 seconds on this database. The cost
+      is that a refresh closes it and a link can't point at one posting.
+    - **No closed-posting strip.** The feed never lists closed postings. The "Posting closed" note
+      remains on the saved job's own page in `/jobs`.
 
 *Done when:* a posting from the pipeline can be saved and then appears in `/jobs` as WISHLIST with
 no applied date. A dismissed posting leaves the feed, and Undo brings it back.

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Discover, full width, chosen 31 Oct 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#06080d;color:#e7ebf3;font:13px/1.5 'Outfit',system-ui,sans-serif}
+  .wrap{padding:16px 20px 60px}
+  h1.page{font:700 20px/1.2 'Outfit';margin:0 0 4px}
+  .lead{color:#8590a6;margin:0 0 12px;max-width:1000px}
+  .controls{display:flex;flex-wrap:wrap;gap:18px;align-items:center;margin:0 0 12px;padding:10px 12px;border:1px solid #2a3448;border-radius:10px;background:#0e1320}
+  .grpc{display:flex;align-items:center;gap:6px}
+  .grpc>span{color:#8590a6;font-size:11px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-right:2px}
+  .seg{display:flex;border:1px solid #2a3448;border-radius:8px;overflow:hidden;flex-wrap:wrap}
+  .seg button{all:unset;cursor:pointer;padding:5px 12px;color:#aab3c6;font-size:12.5px}
+  .seg button.on{background:#34d399;color:#06281c;font-weight:700}
+  .note{color:#8590a6;font-size:12px;margin:10px 2px 0;max-width:1100px}.note b{color:#e7ebf3}
+  #stagewrap{overflow-x:auto}
+
+  .m{font:13px/1.45 'Outfit',system-ui,sans-serif;color:var(--ink);background:var(--bg);border:1px solid var(--frame);border-radius:12px;overflow:hidden;min-height:700px;margin:0 auto}
+  .m *{box-sizing:border-box}
+  .m.dark{--bg:#0a0e16;--topbg:#0e1320;--card:#131a29;--line:#1d2636;--div:#2c3850;--ls:#2a3448;--frame:#2a3448;--ink:#e7ebf3;--sub:#8590a6;--pri:#34d399;--onp:#06281c;--nav:#182132;--sel:#15241f;--selring:#1f4d3c;--av:#1b2436;--avink:#c9d2e3;--chip:#1a2335;--chipink:#c4cde0;--link:#6ee7b7;--app:#6ee7b7;--appbg:rgba(52,211,153,.13);--topshadow:0 1px 0 rgba(0,0,0,.35);--head:#0e1522}
+  .m.la{--bg:#f4f6f9;--topbg:#ffffff;--card:#ffffff;--line:#e3e7ee;--div:#d5dbe5;--ls:#d5dbe5;--frame:#d5dbe5;--ink:#0f172a;--sub:#5f6b80;--pri:oklch(0.511 0.262 276.97);--onp:#ffffff;--nav:#eef1f5;--sel:#eef2ff;--selring:#c7d2fe;--av:#e8ecf2;--avink:#334155;--chip:#eef1f5;--chipink:#334155;--link:#4338ca;--app:#4338ca;--appbg:#e0e7ff;--topshadow:0 1px 3px rgba(15,23,42,.06);--head:#f8fafc}
+  .m .sp{flex:1}.m .sub{color:var(--sub)}
+  .m .top{display:flex;align-items:center;gap:14px;padding:10px 18px;background:var(--topbg);border-bottom:1px solid var(--div);box-shadow:var(--topshadow)}
+  .m .brand{display:flex;align-items:center;gap:7px;font-weight:700;font-size:14px}
+  .m .logo{width:22px;height:22px;border-radius:7px;background:var(--pri);color:var(--onp);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+  .m nav{display:flex;gap:4px}.m nav span{padding:5px 10px;border-radius:7px;color:var(--sub)}.m nav .on{background:var(--nav);color:var(--ink);font-weight:600}
+  .m .page{padding:18px 24px 30px}
+  .m h1{margin:0;font:700 22px/1.1 'Outfit';letter-spacing:-.02em}
+  .m .head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .m .search{width:280px;height:32px;border:1px solid var(--ls);border-radius:8px;background:var(--card);color:var(--sub);display:flex;align-items:center;padding:0 11px}
+  .m .btn{all:unset;box-sizing:border-box;cursor:pointer;height:28px;padding:0 12px;border-radius:7px;background:var(--pri);color:var(--onp);display:inline-flex;align-items:center;font-weight:600;white-space:nowrap;font-size:12.5px}
+  .m .bo{all:unset;box-sizing:border-box;cursor:pointer;height:28px;padding:0 11px;font-size:12.5px;border-radius:7px;border:1px solid var(--ls);display:inline-flex;align-items:center;background:var(--card);color:var(--ink);white-space:nowrap}
+  .m .bo:hover{background:var(--nav)}
+  .m .lbl{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--sub)}
+  .m a.lk{color:var(--link);cursor:pointer}
+  .m .prefs{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 12px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-bottom:10px}
+  .m .chip{padding:2px 8px;border-radius:7px;background:var(--chip);color:var(--chipink);font-size:12px;display:inline-block}
+  .m .chip.rq{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11.5px}
+  .m .tag{display:inline-flex;border-radius:999px;padding:0 8px;font-size:11px;font-weight:600;line-height:20px;background:var(--appbg);color:var(--app)}
+  .m .toggle{display:inline-flex;align-items:center;gap:8px;color:var(--sub);cursor:pointer;user-select:none}
+  .m .sw{width:30px;height:17px;border-radius:999px;background:var(--line);position:relative;flex-shrink:0}
+  .m .sw::after{content:"";position:absolute;left:2px;top:2px;width:13px;height:13px;border-radius:50%;background:var(--ink)}
+  .m .countline{display:flex;align-items:center;gap:14px;margin:0 2px 10px;color:var(--sub)}
+  .m .countline b{color:var(--ink)}
+  .m .pager{display:flex;align-items:center;gap:10px;margin-top:14px;color:var(--sub)}
+  .m .av{width:34px;height:34px;border-radius:9px;background:var(--av);color:var(--avink);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+  .m .role{font-weight:600;font-size:14px;line-height:1.25}
+  .m .meta{color:var(--sub);font-size:12.5px;display:flex;flex-wrap:wrap;gap:3px 10px;margin-top:2px;align-items:center}
+  .m .meta b{color:var(--ink);font-weight:600}
+  .m .done{color:var(--app);font-weight:600;font-size:12.5px;padding-right:4px}
+
+  /* A: grid of cards that fills the width */
+  .m .cards{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(min(380px,100%),1fr))}
+  .m .card{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:13px 14px;display:flex;flex-direction:column;gap:9px;min-width:0}
+  .m .card.sav{border-color:var(--selring);background:var(--sel)}
+  .m .card .t{display:flex;gap:11px;align-items:center;min-width:0}
+  .m .card .t>div:last-child{min-width:0}
+  .m .rqs{display:flex;flex-direction:column;gap:4px;min-height:3px}
+  .m .card .foot{display:flex;align-items:center;gap:7px;margin-top:auto;border-top:1px solid var(--line);padding-top:9px;flex-wrap:wrap}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#e7ebf3;color:#0a0e16;border-radius:10px;padding:9px 12px 9px 16px;display:none;align-items:center;gap:14px;font-weight:600;box-shadow:0 8px 28px rgba(0,0,0,.45);z-index:50}
+  .toast.show{display:flex}.toast button{all:unset;cursor:pointer;color:#0b7a55;font-weight:700;padding:2px 6px;border-radius:5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 class="page">/discover using the full width, chosen 31 Oct 2026 (layout A)</h1>
+  <p class="lead">The page used to stop at 1024 px and sit in the middle, which left empty space on both sides of a wide screen. Chosen: the same cards, with as many columns as fit. <b>Try the Window width switch.</b> Save and Dismiss work.</p>
+
+  <div class="controls">
+    <div class="grpc"><span>Window width</span><div class="seg" id="seg-width">
+      <button data-v="full" class="on">Full window</button><button data-v="1600">1600</button><button data-v="1280">1280</button><button data-v="1000">1000</button>
+    </div></div>
+    <div class="grpc"><span>Theme</span><div class="seg" id="seg-theme"><button data-v="dark" class="on">Dark</button><button data-v="la">Light</button></div></div>
+  </div>
+
+  <div id="stagewrap"><div id="stage"></div></div>
+  <p class="note" id="caption"></p>
+</div>
+<div class="toast" id="toast"><span id="toast-text"></span><button id="toast-undo">Undo</button></div>
+
+<script>
+const REQ = {
+  a:["Experienced in customer support, with 3+ years of experience providing developer support","Proficient in SQL (ideally PostgreSQL). You feel comfortable with complex SQL queries","Excellent communication skills and fluency in English","Strong analytical skills"],
+  b:["Have 5+ years in platform engineering, container/Kubernetes platform operations","Are genuinely deep in at least one of the three strength areas below","Tooling & ecosystem: know the container/orchestration landscape well","Experience with Go","On-call experience"],
+  c:["Strong Haskell skills with at least 3 years of experience","Experience using the C language","Solid knowledge of SQL and plpgsql scripting in PostgreSQL"],
+  d:["Bachelor's degree (or equivalent) in computer science, information technology, or engineering","2+ years of core web apps development experience (front end & back-end)","Working experience with MySql and MongoDB is a strong plus","Strong analytical & problem-solving skills","Exposure to VSCode, Postman, Jira, GitHub","Exposure to Angular/React, Express, MongoDB, NodeJS"],
+  e:["Nest.js","MongoDB and/or MySQL at production scale","Docker and containerized deployment","CI/CD pipelines"]
+};
+const POSTS = [
+  ['CTE PH','Software Engineering Manager','Remote in Philippines','PH','Posted 4 weeks ago',REQ.e],
+  ['Supabase','Support Engineer (APAC - Weekends)','Remote, Global','Worldwide','Posted 4 days ago',REQ.a],
+  ['Supabase','Container Engineer','Remote, Global','Worldwide','Posted 4 days ago',REQ.b],
+  ['Supabase','Software Engineer - Storage','Remote, Global','Worldwide','Posted 5 days ago',REQ.b],
+  ['Supabase','Data API Engineer','Remote, Global','Worldwide','Posted 5 days ago',REQ.c],
+  ['Supabase','Customer Solution Architect (AU, NZ, SG)','Remote, APAC','APAC','Posted 7 days ago',REQ.a],
+  ['Supabase','Software Engineer - Turso','Remote, Global','Worldwide','Posted 8 days ago',REQ.b],
+  ['Supabase','GRC Analyst','Remote, Global','Worldwide','Posted 8 days ago',REQ.a],
+  ['CTE PH','Software Engineer - Remote','Remote in the Philippines','PH','Posted 9 months ago',REQ.d],
+  ['Canonical','Software Engineer, Python','Home based - APAC','APAC','Posted 1 day ago',REQ.c],
+  ['Canonical','Backend Engineer, Kubeflow','Home based - APAC','APAC','Posted 6 days ago',REQ.b],
+  ['Supabase','SDK Engineer - Python','Remote, Global','Worldwide','Posted 13 days ago',REQ.c],
+  ['Supabase','Engineering Manager - Spark','Remote, Global','Worldwide','Posted 8 days ago',REQ.a],
+  ['Canonical','Site Reliability Engineer','Home based - Worldwide','Worldwide','Posted 9 days ago',REQ.b],
+  ['Supabase','Solutions Engineer','Remote, APAC','APAC','Posted 12 days ago',REQ.c],
+  ['Canonical','Channel Partner Sales Executive, Japan','Home Based - APAC','APAC','Posted 2 weeks ago',REQ.a],
+].map(([company, role, location, region, posted, reqs]) => ({ company, role, location, region, posted, reqs }));
+
+const S = { layout:'A', width:'full', theme:'dark', saved:new Set(), dismissed:new Set(), noRegion:false };
+let undoIdx = null, toastTimer = null;
+const CAPTIONS = {
+  A:'<b>Cards, as many columns as fit:</b> each card is at least 380 px wide (or the whole screen, if the screen is narrower), and the page adds a column whenever one fits: 2 at 1000, 3 at 1280 and 1600, 5 on a very wide screen. There is no page width cap.'
+};
+const topbar = `<div class="top"><span class="brand"><span class="logo">S</span>Shortlist</span><nav><span>Dashboard</span><span class="on">Discover</span><span>Jobs</span></nav><span class="sp"></span><span class="sub">☀ ?</span><span class="av" style="width:26px;height:26px;border-radius:50%;font-size:11px">R</span></div>`;
+
+const regionTag = (p) => `<span class="tag">${p.region}</span>`;
+const acts = (i) => S.saved.has(i)
+  ? `<span class="done">✓ Saved to Wishlist</span><button class="bo">View in Jobs</button>`
+  : `<button class="btn" onclick="save(${i})">Save</button><button class="bo" onclick="dismiss(${i})">Dismiss</button><a class="bo">Apply ↗</a>`;
+const vis = () => POSTS.map((_, i) => i).filter(i => !S.dismissed.has(i));
+
+function card(i){ const p = POSTS[i];
+  return `<div class="card ${S.saved.has(i) ? 'sav' : ''}"><div class="t"><div class="av">${p.company[0]}</div><div><a class="role" style="color:var(--ink)">${p.role}</a>
+    <div class="meta"><b>${p.company}</b><span>${p.location}</span>${regionTag(p)}</div></div></div>
+    <div class="rqs">${p.reqs.slice(0, 3).map(r => `<span class="chip rq">${r}</span>`).join('')}${p.reqs.length > 3 ? `<span class="chip rq" style="width:max-content">+${p.reqs.length - 3}</span>` : ''}</div>
+    <div class="foot"><span class="sub">${p.posted}</span><span class="sp"></span>${acts(i)}</div></div>`;
+}
+const prefChips = `<span class="chip">Software Engineer</span><span class="chip">Backend Developer</span><span class="chip">Junior</span><span class="chip">Philippines</span><span class="chip">Remote</span><span class="chip">Remote: APAC</span>`;
+const toggle = `<span class="toggle ${S.noRegion ? 'on' : ''}" onclick="S.noRegion=!S.noRegion;render()"><span class="sw" ${S.noRegion ? 'style="background:var(--pri)"' : ''}></span>Show remote postings with no stated region</span>`;
+const pager = (n) => `<div class="pager"><button class="bo" style="opacity:.5">← Previous</button><span>Page 1 of 9</span><button class="bo">Next →</button></div>`;
+
+function body(){
+  const idx = vis();
+  return `<div class="head"><h1>Discover</h1><span class="sp"></span><div class="search">⌕ Search company or role…</div></div>
+    <div class="prefs"><span class="lbl">Matching</span>${prefChips}<span class="sp"></span><a class="lk">Edit preferences →</a></div>
+    <div class="countline"><span><b>183</b> postings · newest posted 1 day ago</span><span class="sp"></span>${toggle}</div>
+    <div class="cards">${idx.map(card).join('')}</div>${pager()}`;
+}
+function render(){
+  const w = S.width === 'full' ? '100%' : S.width + 'px';
+  document.getElementById('stage').innerHTML = `<div class="m ${S.theme}" style="width:${w}">${topbar}<div class="page">${body()}</div></div>`;
+  document.getElementById('caption').innerHTML = CAPTIONS[S.layout];
+  for (const [id, key] of [['seg-width','width'],['seg-theme','theme']])
+    document.querySelectorAll('#' + id + ' button').forEach(b => b.classList.toggle('on', b.dataset.v === S[key]));
+}
+function save(i){ S.saved.add(i); render(); }
+function dismiss(i){
+  S.dismissed.add(i); undoIdx = i; render();
+  document.getElementById('toast-text').textContent = 'Dismissed · ' + POSTS[i].company + ', ' + POSTS[i].role;
+  const t = document.getElementById('toast'); t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 6000);
+}
+document.getElementById('toast-undo').onclick = () => { if (undoIdx !== null) S.dismissed.delete(undoIdx); undoIdx = null; document.getElementById('toast').classList.remove('show'); render(); };
+for (const [id, key] of [['seg-width','width'],['seg-theme','theme']])
+  document.getElementById(id).addEventListener('click', e => { if (e.target.dataset.v){ S[key] = e.target.dataset.v; render(); }});
+render();
+</script>
+</body>
+</html>

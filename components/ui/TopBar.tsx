@@ -13,6 +13,7 @@ import UserAvatar from "../UserAvatar";
 
 const NAV_ITEMS = [
   { name: 'Dashboard', href: '/dashboard' },
+  { name: 'Discover', href: '/discover' },
   { name: 'Jobs', href: '/jobs' },
 ]
 

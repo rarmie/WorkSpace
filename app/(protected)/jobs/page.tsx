@@ -59,7 +59,7 @@ export default async function JobsPage({
   const selected = selectedId
     ? await prisma.jobApplication.findUnique({
         where: { id: selectedId, userId: session.user.id },
-        include: { contacts: true, documents: true },
+        include: { contacts: true, documents: true, posting: { select: { closedAt: true } } },
       })
     : null;
 

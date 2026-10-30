@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import TopBar from "@/components/ui/TopBar";
+import { Toaster } from "@/components/ui/sonner";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
@@ -26,6 +27,8 @@ export default async function ProtectedLayout({
       <main className="flex-1 bg-background overflow-y-auto">
         {children}
       </main>
+      {/* Shows the "Dismissed · Undo" toast from the discovery feed. */}
+      <Toaster />
     </div>
   )
 }
