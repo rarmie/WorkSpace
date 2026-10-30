@@ -1,0 +1,22 @@
+version: 2
+
+# Tests run after the models are built. A failing test fails the pipeline run, the same
+# job the hand-written checks in pipeline/publish.py do for the published table.
+models:
+  - name: posting_week
+    columns:
+      - name: source_id
+        data_tests: [not_null]
+      - name: week_start
+        data_tests: [not_null]
+
+  - name: skill_trend
+    columns:
+      - name: week_start
+        data_tests: [not_null]
+      - name: skill
+        data_tests: [not_null]
+      - name: postings
+        data_tests: [not_null]
+      - name: total_postings
+        data_tests: [not_null]

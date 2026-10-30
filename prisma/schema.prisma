@@ -209,18 +209,3 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
-
-
-// Phase 8: how often each skill appears in requirement bullets, per week. Written by
-// pipeline/trends.py, which rebuilds the whole table each run. A posting counts in the week it was
-// first seen. `totalPostings` is that week's postings that had any requirement bullets, so
-// `postings / totalPostings` is the share and stays comparable across weeks.
-model SkillTrend {
-  id            String   @id @default(cuid())
-  weekStart     DateTime @db.Date
-  skill         String
-  postings      Int
-  totalPostings Int
-
-  @@unique([weekStart, skill])
-}

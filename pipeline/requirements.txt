@@ -3,3 +3,5 @@ python-dotenv
 httpx
 beautifulsoup4
 lxml
+dbt-core==1.11.16
+dbt-postgres==1.11.0
